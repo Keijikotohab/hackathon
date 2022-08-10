@@ -1,0 +1,8 @@
+FROM python
+
+RUN apt update -y \
+&& apt upgrade -y \
+&& apt install -y vim git
+
+
+RUN pip3 install  -U pip slack slack_sdk aiohttp requests

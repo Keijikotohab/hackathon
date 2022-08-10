@@ -1,0 +1,19 @@
+version: '3'
+services:
+  flask:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    command: python3 /app/flask_app.py
+    ports:
+      - 80:80
+    volumes:
+      - .:/app
+    tty: True
+  slack:
+    build:
+      context: .
+      dockerfile: ./Dockerfile_slack
+        
+
+
