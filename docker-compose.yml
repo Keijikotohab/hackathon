@@ -4,7 +4,7 @@ services:
     build:
       context: .
       dockerfile: ./Dockerfile
-    command: python3 /app/flask_app.py
+    command: python3 /app/main.py
     ports:
       - 80:80
     volumes:
