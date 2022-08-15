@@ -4,7 +4,7 @@
 
 
 ## AIお試し方法
-'''python
+```python
 from face_detector import YoloDetector
 import numpy as np
 from PIL import Image
@@ -12,4 +12,4 @@ from PIL import Image
 model = YoloDetector(target_size=720,gpu=0,min_face=90)
 orgimg = np.array(Image.open('test.jpeg'))
 bboxes,points = model.predict(orgimg)
-'''
+```
