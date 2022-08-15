@@ -1,4 +1,5 @@
 import sqlite3
+from crud import Sqlite3
 
 dbname = "main.db"
 conn = sqlite3.connect(dbname)
@@ -16,3 +17,8 @@ conn.commit()
 print('init success')
 cur.close()
 conn.close()
+
+sq = Sqlite3()
+sq.create()
+sq.read()
+

@@ -69,6 +69,7 @@ class Sqlite3:
             INSERT INTO main(img_path) values('{img_path}');
             """
             self.cur.execute(sql)
+        logger.debug('created')
 
     def read(self) -> list:
         """
@@ -77,7 +78,7 @@ class Sqlite3:
         """
 
         sql = f"""
-        select * from main;
+        select * from main order by weight;
         """
 
         self.cur.execute(sql)
