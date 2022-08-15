@@ -8,22 +8,25 @@ import argparse
 import sys
 import time
 
-sys.path.append('./')  # to run '$ python *.py' files in subdirectories
+sys.path.append("./")  # to run '$ python *.py' files in subdirectories
 
+import onnx
 import torch
 import torch.nn as nn
-
-from yoloface.models.experimental import attempt_load
 from yoloface.models.common import Conv
+from yoloface.models.experimental import attempt_load
 from yoloface.utils.activations import Hardswish, SiLU
-from yoloface.utils.general import set_logging, check_img_size
-import onnx
+from yoloface.utils.general import check_img_size, set_logging
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('--weights', type=str, default='./yolov5s.pt', help='weights path')  # from yolov5/models/
-    parser.add_argument('--img-size', nargs='+', type=int, default=[640, 640], help='image size')  # height, width
-    parser.add_argument('--batch-size', type=int, default=1, help='batch size')
+    parser.add_argument(
+        "--weights", type=str, default="./yolov5s.pt", help="weights path"
+    )  # from yolov5/models/
+    parser.add_argument(
+        "--img-size", nargs="+", type=int, default=[640, 640], help="image size"
+    )  # height, width
+    parser.add_argument("--batch-size", type=int, default=1, help="batch size")
     opt = parser.parse_args()
     opt.img_size *= 2 if len(opt.img_size) == 1 else 1  # expand
     print(opt)
@@ -31,16 +34,22 @@ if __name__ == '__main__':
     t = time.time()
 
     # Load PyTorch model
-    model = attempt_load(opt.weights, map_location=torch.device('cpu'))  # load FP32 model
+    model = attempt_load(
+        opt.weights, map_location=torch.device("cpu")
+    )  # load FP32 model
     model.eval()
     labels = model.names
 
     # Checks
     gs = int(max(model.stride))  # grid size (max stride)
-    opt.img_size = [check_img_size(x, gs) for x in opt.img_size]  # verify img_size are gs-multiples
+    opt.img_size = [
+        check_img_size(x, gs) for x in opt.img_size
+    ]  # verify img_size are gs-multiples
 
     # Input
-    img = torch.zeros(opt.batch_size, 3, *opt.img_size)  # image size(1,3,320,192) iDetection
+    img = torch.zeros(
+        opt.batch_size, 3, *opt.img_size
+    )  # image size(1,3,320,192) iDetection
 
     # Update model
     for k, m in model.named_modules():
@@ -56,16 +65,26 @@ if __name__ == '__main__':
     y = model(img)  # dry run
 
     # ONNX export
-    print('\nStarting ONNX export with onnx %s...' % onnx.__version__)
-    f = opt.weights.replace('.pt', '.onnx')  # filename
+    print("\nStarting ONNX export with onnx %s..." % onnx.__version__)
+    f = opt.weights.replace(".pt", ".onnx")  # filename
     model.fuse()  # only for ONNX
-    torch.onnx.export(model, img, f, verbose=False, opset_version=12, input_names=['data'],
-                      output_names=['stride_' + str(int(x)) for x in model.stride])
+    torch.onnx.export(
+        model,
+        img,
+        f,
+        verbose=False,
+        opset_version=12,
+        input_names=["data"],
+        output_names=["stride_" + str(int(x)) for x in model.stride],
+    )
 
     # Checks
     onnx_model = onnx.load(f)  # load onnx model
     onnx.checker.check_model(onnx_model)  # check onnx model
     # print(onnx.helper.printable_graph(onnx_model.graph))  # print a human readable model
-    print('ONNX export success, saved as %s' % f)
+    print("ONNX export success, saved as %s" % f)
     # Finish
-    print('\nExport complete (%.2fs). Visualize with https://github.com/lutzroeder/netron.' % (time.time() - t))
+    print(
+        "\nExport complete (%.2fs). Visualize with https://github.com/lutzroeder/netron."
+        % (time.time() - t)
+    )
