@@ -24,6 +24,10 @@ class Index:
 
 class Sqlite3:
     def __init__(self):
+        self.conn = None
+        self.cur = None
+
+    def connect(self):
         dbname = "main.db"
         self.conn = sqlite3.connect(dbname)
         self.cur = self.conn.cursor()
@@ -85,8 +89,7 @@ class Sqlite3:
         all_date = self.cur.fetchall()
         return all_date
 
-    def update_name(self):
-        index = Index().new_weight()
+    def update_name(self, index):
         for img_path, weight in index.items():
             sql = f"""
             UPDATE main set weight = {weight} where img_path = '{img_path}';
@@ -112,12 +115,15 @@ class Sqlite3:
 
 if __name__ == "__main__":
     sq = Sqlite3()
+    sq.connect()
+
     sq.delete_all_items()
 
     sq.create()
     sq.read()
 
-    sq.update_name()
+    index = Index().new_weight()
+    sq.update_name(index)
     sq.read()
 
     sq.update_weight()
