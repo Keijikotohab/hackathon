@@ -9,7 +9,7 @@ def hello():
     return render_template("index.html")
 
 @app.route("/split_img")
-def hello():
+def split_img():
     """
     画像のパスをJSから受け取ってcrudに投げる
     crudは，切り取り済み画像をフォルダに保存してそのパスをDBに保存
@@ -19,7 +19,7 @@ def hello():
     return render_template("index.html")
 
 @app.route("/register")
-def hello():
+def register():
     """
     DBの名前をアップデート
     """
@@ -30,7 +30,7 @@ def hello():
     return render_template("index.html")
 
 @app.route("/index")
-def hello():
+def index():
     """
     登録一覧を確認する
     """
