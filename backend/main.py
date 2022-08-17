@@ -1,5 +1,5 @@
 from flask import Flask, render_template
-from crud import Splite3
+from crud import Sqlite3
 
 app = Flask(__name__)
 sql3 = Sqlite3()
