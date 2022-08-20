@@ -18,7 +18,6 @@ marginTop: -5,
 }));
 
 export const ImagePreviewBox = styled("div")(() => ({
-display: "flex", 
 marginTop: 10
 }));
 
@@ -26,3 +25,10 @@ export const AddButtonBox = styled("div")(() => ({
 textAlign: "center", 
 marginTop: 10
 }));
+
+export const RegisterButtonBox = styled("div")(() => ({
+  textAlign: "center", 
+  marginTop: 10,
+  marginBottom: 30
+  }));
+  
