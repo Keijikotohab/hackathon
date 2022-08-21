@@ -14,6 +14,10 @@ class Slack:
         self.client.files_upload(channels=id_, file=img_path)
 
     def get_users(self):
+        """
+        user[id] -> ユーザとbotのDMのチャンネルID
+        use[name] -> ユーザ名
+        """
         users = self.client.users_list()['members']
         for user in users:
             print(user)
@@ -22,6 +26,9 @@ class Slack:
                 self.users.append((user['id'], user['name']))
 
     def send2users(self, img_path):
+        """
+        self.users内のユーザにbotからのDMでメッセージと画像を送る
+        """
         for user_id, user_name in self.users:
             print(user_id, user_name)
             if user_name == 'slackbot':
@@ -33,6 +40,9 @@ class Slack:
         return self.client.conversations_list(types='im')['channels']
         
     def get_latest_reply(self):
+        """
+        ユーザとbotのDMの最新のメッセージの中の最新のリプライを取得する
+        """
         for im in self._get_ims():
             id_ = im['id']
             latest_message = self.client.conversations_history(channel=id_, limit=1)['messages']
