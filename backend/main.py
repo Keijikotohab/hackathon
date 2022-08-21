@@ -28,13 +28,24 @@ def uploads_image():
             return redirect(request.url)
         if file and allwed_file(file.filename):
             filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            return jsonify({"id": "12345",
+            save_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            file.save(save_path)
+
+            sql3.connect()
+            clipped_imgs = sql3.create(save_path)
+            #sql3.close()
+            #print('clipped imgs:')
+            #print(clipped_imgs)
+
+            #return jsonify(clipped_imgs)
+
+            print('enddddddddd')
+            return jsonify([{"id": "12345",
                             "image_path": "http://127.0.0.1/static/imgs/"+filename},
                             {"id": "67890",
                             "image_path": "http://127.0.0.1/static/imgs/"+filename},
                             {"id": "63456",
-                            "image_path": "http://127.0.0.1/static/imgs/"+filename})
+                            "image_path": "http://127.0.0.1/static/imgs/"+filename}])
 
 @app.route('/name', methods=['GET', 'POST'])
 def check():

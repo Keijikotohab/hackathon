@@ -14,6 +14,13 @@ services:
     build:
       context: .
       dockerfile: ./Dockerfile_slack
-        
-
-
+  react-app:
+    build:
+      context: .
+      dockerfile: Dockerfile_frontend
+    volumes:
+      - ../frontend:/usr/src/app # ローカルをコンテナ内にマウント
+    command: yarn start
+    ports:
+      - 3000:3000
+    stdin_open: true 

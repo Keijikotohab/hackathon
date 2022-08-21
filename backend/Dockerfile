@@ -13,3 +13,6 @@ RUN pip3 install flask_cors
 RUN pip3 install werkzeug
 
 RUN apt install -y libgl1-mesa-dev
+
+# pip3 は最後にまとめる。
+# キャッシュ使うために，とりあえず下に追加する

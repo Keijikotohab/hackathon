@@ -1,4 +1,5 @@
 import logging
+from slack import Slack
 import pathlib
 import sqlite3
 
@@ -43,7 +44,8 @@ class Sqlite3:
         """
 
         img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
-        save_path = str((pathlib.Path("img") / file_name).with_suffix(".jpg"))
+        save_path = str((pathlib.Path("static") / 'imgs'/ file_name).with_suffix(".jpg"))
+        print(save_path)
         cv2.imwrite(save_path, img)
 
     def clip(self, img_path: str) -> list:
@@ -64,16 +66,19 @@ class Sqlite3:
 
         clipped = self.clip(img_path)
 
-        # ここでindex.htmlにもわたす
-        # img_path兼uuidで識別する
+        li = []
 
-        for img, img_path, _ in clipped:
-            self.save_img(img, img_path)
+        for img, uuid in clipped:
+            self.save_img(img, uuid)
             sql = f"""
-            INSERT INTO main(img_path) values('{img_path}');
+            INSERT INTO main(img_path) values('{uuid}');
             """
             self.cur.execute(sql)
+            li.append({"id": uuid, "image_path": "http://127.0.0.1/static/imgs/"+uuid})
+
         logger.debug('created')
+
+        return li
 
     def read(self) -> list:
         """
@@ -114,12 +119,19 @@ class Sqlite3:
 
 
 if __name__ == "__main__":
+    slack = Slack()
     sq = Sqlite3()
     sq.connect()
 
     sq.delete_all_items()
 
-    sq.create()
+    imgs = sq.create()
+    print(imgs)
+    for img in imgs:
+        file_path = './static/imgs/' + img['id'] + '.jpg'
+        print(file_path)
+        slack.send_img(file_path)
+
     sq.read()
 
     index = Index().new_weight()

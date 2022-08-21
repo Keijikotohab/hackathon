@@ -1,4 +1,5 @@
 import logging
+import cv2
 from uuid import uuid4
 
 import numpy as np
@@ -35,11 +36,18 @@ class FaceDetector:
         bboxの情報をもとに，写真を切り抜く。
         return [切り抜いた写真, uuid, bbox]
         """
-        return [[self.orgimg, bbox[0], bbox[1]] for bbox in self.bboxes]
+        li = list()
+        for uuid, bbox in self.bboxes:
+            topleft_x, topleft_y, bottomright_x, bottomright_y = bbox
+            topleft_x, topleft_y, bottomright_x, bottomright = int(0.9 * topleft_x), int(0.9 * topleft_y), int(1.1 * bottomright_x), int(1.1 * bottomright_y)
+            img = self.orgimg[topleft_y:bottomright_y, topleft_x:bottomright_x]
+            li.append([img, uuid])
+
+        return li
 
 
 if __name__ == "__main__":
+    print('start')
     fd = FaceDetector("test.jpeg")
     fd.predict()
     ret = fd.clip()
-    print(ret)
