@@ -62,6 +62,8 @@ class Sqlite3:
         """
         切り取った画像をフォルダに保存
         切り取った画像のデータをDBに保存
+
+        return {"id": uuid, "image_path": "http://127.0.0.1/static/imgs/"+uuid}
         """
 
         clipped = self.clip(img_path)

@@ -12,10 +12,6 @@ def allwed_file(filename):
 
 sql3 = Sqlite3()
 
-@app.route("/")
-def hello():
-    return render_template("index.html")
-
 @app.route('/images', methods=['GET', 'POST'])
 def uploads_image():
     if request.method == 'POST':
@@ -39,7 +35,6 @@ def uploads_image():
 
             #return jsonify(clipped_imgs)
 
-            print('enddddddddd')
             return jsonify([{"id": "12345",
                             "image_path": "http://127.0.0.1/static/imgs/"+filename},
                             {"id": "67890",
