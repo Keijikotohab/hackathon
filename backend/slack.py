@@ -14,6 +14,25 @@ class Slack:
     def _send_img(self, id_, img_path):
         self.client.files_upload(channels=id_, file=img_path)
 
+    def _add_reaction(self, channel_id, ts):
+        try:
+            self.client.reactions_add(channel=channel_id, name='+1', timestamp=ts)
+        except Exception as e:
+            pass
+        try:
+            self.client.reactions_add(channel=channel_id, name='-1', timestamp=ts)
+        except Exception as e:
+            pass
+
+    def _get_channle_history(self, channel_id, limit=1):
+        latest_msg = self.client.conversations_history(channel=channel_id, limit=limit)['messages']
+        ts = latest_msg[0]['ts']
+        return latest_msg, ts
+
+    def _get_replies(self, channel_id, ts, limit):
+        replies = self.client.conversations_replies(channel=channel_id, ts=ts, limit=limit)['messages']
+        return replies
+
     def _get_users(self):
         """
         user[id] -> ユーザとbotのDMのチャンネルID
@@ -46,10 +65,12 @@ class Slack:
     def _get_ims(self):
         return self.client.conversations_list(types='im')['channels']
 
-    def send_img_msg_reaction(self, img_path, msg):
+    def send_img_msg_reaction(self, channle_id, img_path, msg):
+        self._send_img(channel_id, img_path)
+        self._send_msg(channel_id, msg)
+        _ , ts = self._get_channle_history(channel_id)
+        self._add_reaction(channel_id, ts)
 
-    def add_reaction(self, channel_id, ts):
-        self.client.reactions_add(channel=channel_id, name='+1', timestamp=ts)
         
     def get_latest_reply(self):
         """
@@ -58,11 +79,10 @@ class Slack:
         replies = list()
         for im in self._get_ims():
             id_ = im['id']
-            latest_message = self.client.conversations_history(channel=id_, limit=1)['messages']
-            ts = latest_message[0]['ts']
-
-            reply = self.client.conversations_replies(channel=id_, ts=ts, limit=5)['messages'][-1]['text']
+            latest_msg, ts = self._get_channle_history(id_)
+            reply = self._get_replies(id_, ts, 5)
             replies.append(reply)
+            self._add_reaction(id_, ts)
 
         return replies
 

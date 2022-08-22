@@ -53,9 +53,10 @@ def check():
     print(request.json[0]["name"])
     print(request.json[1]["name"])
     for i in range(len(request.json)):
-        slack._send_img(slack.channel_id,"static/imgs/"+request.json[i]["id"]+".jpg")
-        slack._send_msg(slack.channel_id,request.json[i]["name"]+"さんが登録されました。皆さん名前を覚えましょう。")
-    return ""
+        id_ = slack.channel_id # 本来はDBから取得する
+        img_path = "static/imgs/"+request.json[i]["id"]+".jpg"
+        msg = request.json[i]["name"]+"さんが登録されました。皆さん名前を覚えましょう。"
+        slack.send_img_msg(id_, img_path, msg)
 
 @app.route("/split_img")
 def split_img():
