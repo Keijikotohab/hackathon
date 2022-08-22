@@ -73,6 +73,7 @@ const Main: React.FC = () => {
         console.log(imageList)
         await sleep(1000);
         setScreenStatus(1)
+        console.log(screenStatus)
         setDisplayedIndividualImages(imageList)
         console.log(displayedIndividualImages)
     })();

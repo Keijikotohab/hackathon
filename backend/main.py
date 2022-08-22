@@ -3,6 +3,7 @@ from flask import Flask, render_template, request, g, jsonify, redirect, url_for
 from flask_cors import CORS
 import os
 from werkzeug.utils import secure_filename
+from slack import Slack
 app = Flask(__name__)
 CORS(app)
 
@@ -11,6 +12,7 @@ def allwed_file(filename):
         return '.' in filename and filename.rsplit('.', 1)[1].lower() in set(['png', 'jpg', 'jpeg', 'gif']) #入力を許可する形式
 
 sql3 = Sqlite3()
+slack = Slack()
 
 @app.route('/images', methods=['GET', 'POST'])
 def uploads_image():
@@ -28,25 +30,31 @@ def uploads_image():
             file.save(save_path)
 
             sql3.connect()
-            #clipped_imgs = sql3.create(save_path)
+            clipped_imgs = sql3.create(save_path)
             sql3.close()
             print('clipped imgs:')
-            #print(clipped_imgs)
+            print(clipped_imgs)
 
-            #return jsonify(clipped_imgs)
-
+            return jsonify(clipped_imgs)
+            """
             return jsonify([{"id": "12345",
                             "image_path": "http://127.0.0.1/static/imgs/"+filename},
                             {"id": "67890",
                             "image_path": "http://127.0.0.1/static/imgs/"+filename},
                             {"id": "63456",
                             "image_path": "http://127.0.0.1/static/imgs/"+filename}])
+            """
 
 @app.route('/name', methods=['GET', 'POST'])
 def check():
     if request.method == 'POST':
         data = request.json
-    print(request.json)
+    print(len(request.json))
+    print(request.json[0]["name"])
+    print(request.json[1]["name"])
+    for i in range(len(request.json)):
+        slack._send_img(slack.channel_id,"static/imgs/"+request.json[i]["id"]+".jpg")
+        slack._send_msg(slack.channel_id,request.json[i]["name"]+"さんが登録されました。皆さん名前を覚えましょう。")
     return ""
 
 @app.route("/split_img")
