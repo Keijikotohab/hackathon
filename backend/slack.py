@@ -31,7 +31,6 @@ class Slack:
         チャンネル内のユーザを取得する
         """
         users = self.client.conversations_members(channel=self.channel_id)['members']
-        breakpoint()
 
     def send2users(self, msg, img_path):
         """
@@ -46,6 +45,11 @@ class Slack:
 
     def _get_ims(self):
         return self.client.conversations_list(types='im')['channels']
+
+    def send_img_msg_reaction(self, img_path, msg):
+
+    def add_reaction(self, channel_id, ts):
+        self.client.reactions_add(channel=channel_id, name='+1', timestamp=ts)
         
     def get_latest_reply(self):
         """
@@ -56,8 +60,10 @@ class Slack:
             id_ = im['id']
             latest_message = self.client.conversations_history(channel=id_, limit=1)['messages']
             ts = latest_message[0]['ts']
+
             reply = self.client.conversations_replies(channel=id_, ts=ts, limit=5)['messages'][-1]['text']
             replies.append(reply)
+
         return replies
 
 if __name__ == '__main__':
@@ -65,5 +71,5 @@ if __name__ == '__main__':
     channel_id = 'C03U9T9T7C6'
     slack = Slack(token, channel_id)
     #slack.send2users('./test.jpeg')
-    #slack.get_latest_reply()
-    slack._get_channel_users(channel_id)
+    slack.get_latest_reply()
+    slack._get_channel_users()
