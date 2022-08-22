@@ -116,7 +116,7 @@ class Sqlite3:
         """
         self.cur.execute(sql)
 
-    def change_has_sent(self):
+    def change_has_sent(self, condition):
         """
         condition -> ex. WHERE decay = 0
         """
