@@ -70,6 +70,17 @@ def register():
 
     return render_template("index.html")
 
+@app.route("/update_weight")
+def update_weight():
+    """
+    DBのweightをアップデート
+    """
+    # JSからの諸々
+    weight_dict = {"aa-aa-bb": "60", "bb-bb-cc": "70", "cc-cc-dd": "80"}
+    sql3.update_weight(weight_dict)
+
+    return render_template("index.html")
+
 @app.route("/index")
 def index():
     """
