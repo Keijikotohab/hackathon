@@ -28,9 +28,9 @@ def uploads_image():
             file.save(save_path)
 
             sql3.connect()
-            clipped_imgs = sql3.create(save_path)
-            #sql3.close()
-            #print('clipped imgs:')
+            #clipped_imgs = sql3.create(save_path)
+            sql3.close()
+            print('clipped imgs:')
             #print(clipped_imgs)
 
             #return jsonify(clipped_imgs)

@@ -76,7 +76,7 @@ class Sqlite3:
             INSERT INTO main(img_path) values('{uuid}');
             """
             self.cur.execute(sql)
-            li.append({"id": uuid, "image_path": "http://127.0.0.1/static/imgs/"+uuid})
+            li.append({"id": uuid, "image_path": "http://127.0.0.1/static/imgs/"+uuid+".jpg"})
 
         logger.debug('created')
 
