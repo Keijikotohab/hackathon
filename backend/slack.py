@@ -24,6 +24,9 @@ class Slack:
         except Exception as e:
             pass
 
+    def _get_reaction(self, channel_id, ts):
+        reactions = self.client.reactions_get(channel=channel_id, timestamp=ts)['message']['reactions']
+
     def _get_channle_history(self, channel_id, limit=1):
         latest_msg = self.client.conversations_history(channel=channel_id, limit=limit)['messages']
         ts = latest_msg[0]['ts']
@@ -40,7 +43,6 @@ class Slack:
         """
         users = self.client.users_list()['members']
         for user in users:
-            print(user)
             is_bot = user['is_bot']
             if not is_bot:
                 self.users.append((user['id'], user['name']))
@@ -56,7 +58,6 @@ class Slack:
         self.users内のユーザにbotからのDMでメッセージと画像を送る
         """
         for user_id, user_name in self.users:
-            print(user_id, user_name)
             if user_name == 'slackbot':
                 continue
             self._send_msg(user_id, msg)
@@ -70,6 +71,7 @@ class Slack:
         self._send_msg(channel_id, msg)
         _ , ts = self._get_channle_history(channel_id)
         self._add_reaction(channel_id, ts)
+        self._get_reaction(channel_id, ts)
 
         
     def get_latest_reply(self):
@@ -83,6 +85,7 @@ class Slack:
             reply = self._get_replies(id_, ts, 5)
             replies.append(reply)
             self._add_reaction(id_, ts)
+            self._get_reaction(id_, ts)
 
         return replies
 
