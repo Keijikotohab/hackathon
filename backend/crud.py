@@ -99,17 +99,38 @@ class Sqlite3:
     def update_name(self, index):
         for img_path, weight in index.items():
             sql = f"""
-            UPDATE main set weight = {weight} where img_path = '{img_path}';
+            UPDATE main SET weight = {weight} where img_path = '{img_path}';
             """
             self.cur.execute(sql)
 
-    def update_weight(self):
-        index = Index().get_name()
-        for img_path, name in index.items():
-            sql = f"""
-            UPDATE main set name = '{name}' where img_path = '{img_path}';
-            """
-            self.cur.execute(sql)
+    def decrement_weight(self, id_, decay=0.25):
+        sql = f"""
+        UPDATE main SET weight = weight - {decay} WHERE has_sent = -1;
+        """
+        self.cur.execute(sql)
+
+    def fetch_unsent_zeros(self):
+        # 一旦ファイル名だけ返す
+        sql = f"""
+        SELECT id, img_path, weight FROM main WHERE (has_sent = -1) AND (wight = 0);
+        """
+        self.cur.execute(sql)
+
+    def change_has_sent(self):
+        """
+        condition -> ex. WHERE decay = 0
+        """
+
+        sql = f"""
+        UPDATE main SET has_sent = -1 * has_sent {condition};
+        """
+        self.cur.execute(sql)
+
+    def update_weight(self, id_, new_weight):
+        sql = f"""
+        UPDATE main SET weight = {new_weight} WHERE id = {id_};
+        """
+        self.cur.execute(sql)
 
     # 今回は最悪作らない
     def delete_all_items(self):

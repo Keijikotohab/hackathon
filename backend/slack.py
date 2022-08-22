@@ -26,6 +26,13 @@ class Slack:
             if not is_bot:
                 self.users.append((user['id'], user['name']))
 
+    def _get_channel_users(self):
+        """
+        チャンネル内のユーザを取得する
+        """
+        users = self.client.conversations_members(channel=self.channel_id)['members']
+        breakpoint()
+
     def send2users(self, msg, img_path):
         """
         self.users内のユーザにbotからのDMでメッセージと画像を送る
@@ -58,4 +65,5 @@ if __name__ == '__main__':
     channel_id = 'C03U9T9T7C6'
     slack = Slack(token, channel_id)
     #slack.send2users('./test.jpeg')
-    slack.get_latest_reply()
+    #slack.get_latest_reply()
+    slack._get_channel_users(channel_id)
