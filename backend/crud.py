@@ -22,7 +22,6 @@ class Index:
     def new_weight(self):
         return {"aa-aa-bb": 1, "bb-bb-cc": 2, "cc-cc-dd": 3}
 
-
 class Sqlite3:
     def __init__(self):
         self.conn = None
@@ -68,6 +67,8 @@ class Sqlite3:
 
         clipped = self.clip(img_path)
 
+        logger.debug('AI fin.')
+
         li = []
 
         for img, uuid in clipped:
@@ -78,11 +79,11 @@ class Sqlite3:
             self.cur.execute(sql)
             li.append({"id": uuid, "image_path": "http://127.0.0.1/static/imgs/"+uuid+".jpg"})
 
-        logger.debug('created')
+        logger.debug('db updated')
 
         return li
 
-    def read(self) -> list:
+    def fetch_all(self) -> list:
         """
         全部表示
         全部取り出し
@@ -114,7 +115,8 @@ class Sqlite3:
         sql = f"""
         SELECT id, img_path, weight FROM main WHERE (has_sent = -1) AND (wight = 0);
         """
-        self.cur.execute(sql)
+        unsent_zeros = self.cur.fetchall(sql)
+        return unsent_zeros
 
     def change_has_sent(self, condition):
         """
