@@ -10,7 +10,6 @@ from face_detector import YoloDetector
 logger = logging.getLogger("mylog")
 logger.setLevel(logging.DEBUG)
 
-
 class FaceDetector:
     """
     AIの力で写真から顔を切り抜く

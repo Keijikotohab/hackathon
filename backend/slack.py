@@ -1,7 +1,7 @@
 from slack_sdk import WebClient
 
 class Slack:
-    def __init__(self, token='xoxb-3651744076246-3968426113411-sGuvyQURzhNeGXXA4auzKVv0', channel_id='C03U9T9T7C6'):
+    def __init__(self, token='xoxb-3651744076246-3980300448548-6woxRpI8gLRXw1gtNv4DrGAg', channel_id='C03U9T9T7C6'):
         self.channel_id = channel_id
         self.client = WebClient(token=token)
         self.users = list(list())
@@ -124,9 +124,7 @@ class Slack:
         return replies
 
 if __name__ == '__main__':
-    token = 'xoxb-3651744076246-3968426113411-sGuvyQURzhNeGXXA4auzKVv0'
-    channel_id = 'C03U9T9T7C6'
-    slack = Slack(token, channel_id)
+    slack = Slack()
     #slack.send2users('./test.jpeg')
     slack.get_latest_reply()
     slack._get_channel_users()

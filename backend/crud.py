@@ -1,5 +1,7 @@
 import logging
+
 from slack import Slack
+
 import pathlib
 import sqlite3
 
