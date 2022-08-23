@@ -97,13 +97,6 @@ class Sqlite3:
         all_date = self.cur.fetchall()
         return all_date
 
-    def update_name(self, index):
-        for img_path, weight in index.items():
-            sql = f"""
-            UPDATE main SET weight = {weight} where img_path = '{img_path}';
-            """
-            self.cur.execute(sql)
-
     def decrement_weight(self, id_, decay=0.25):
         sql = f"""
         UPDATE main SET weight = weight - {decay} WHERE has_sent = -1;
@@ -118,7 +111,7 @@ class Sqlite3:
         unsent_zeros = self.cur.fetchall(sql)
         return unsent_zeros
 
-    def change_has_sent(self, condition):
+    def change_has_sent(self, condition: str):
         """
         condition -> ex. WHERE decay = 0
         """
@@ -128,9 +121,20 @@ class Sqlite3:
         """
         self.cur.execute(sql)
 
-    def update_weight(self, id_, new_weight):
+    def fetch_step(self, id_):
         sql = f"""
-        UPDATE main SET weight = {new_weight} WHERE id = {id_};
+        SELECT step FROM main WHERE id = {id_};
+        """
+        self.cur.execute(sql)
+        return self.cur.fetchone()[0]
+
+    def update_field(self, id_, field_name: str, value: any):
+        """
+        field_name -> ex. weight, step
+        value -> ex. 1.0, 2
+        """
+        sql = f"""
+        UPDATE main SET {field_name} = {value} WHERE id = {id_};
         """
         self.cur.execute(sql)
 
