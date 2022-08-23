@@ -11,7 +11,11 @@
 1. ディレクトリに，`.env`を作成
 1. `.env`に先ほどコピーしたtokenを貼り付け
 ```python:.env
-SLACK_TOKEN={Here change bot token, end delete "{}"}
+SLACK_TOKEN={Here change bot token, and delete "{}"}
 ```
 ## 3. サーバー起動
+1. `cd backend`
 1. `docker compose up --build`
+
+## 4. アプリアクセス
+- `http://localhost:3000`にアクセス
