@@ -14,6 +14,9 @@ services:
     build:
       context: .
       dockerfile: ./Dockerfile_slack
+    command: python3 /app/slack_send.py
+    ports:
+      - 90:90
     stdin_open: true 
     tty: true
     volumes:
