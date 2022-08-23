@@ -65,7 +65,7 @@ class Slack:
             ts = msg['ts']
             try:
                 reactions = msg['reactions']
-                print(reactions)
+                print("リアクション",reactions)
             except:
                 pass
             else:
@@ -96,6 +96,11 @@ class Slack:
             self._send_msg(user_id, msg)
             self._send_img(user_id, img_path)
 
+    def send_img_msg(self, channel_id, img_path, msg):
+        self._send_img(channel_id, img_path)
+        self._send_msg(channel_id, msg)
+        _ , ts = self._get_channle_history(channel_id)
+        
     def send_img_msg_reaction(self, channel_id, img_path, msg):
         self._send_img(channel_id, img_path)
         self._send_msg(channel_id, msg)

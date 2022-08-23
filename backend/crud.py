@@ -97,7 +97,7 @@ class Sqlite3:
         all_date = self.cur.fetchall()
         return all_date
 
-    def decrement_weight(self, id_, decay=0.25):
+    def decrement_weight(self, decay=0.25):
         sql = f"""
         UPDATE main SET weight = weight - {decay} WHERE has_sent = -1;
         """

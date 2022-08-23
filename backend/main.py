@@ -56,7 +56,7 @@ def check():
         id_ = slack.channel_id # 本来はDBから取得する
         img_path = "static/imgs/"+request.json[i]["id"]+".jpg"
         msg = request.json[i]["name"]+"さんが登録されました。皆さん名前を覚えましょう。"
-        slack.send_img_msg_reaction(id_, img_path, msg)
+        slack.send_img_msg(id_, img_path, msg)
     return ""
 
 @app.route("/split_img")
