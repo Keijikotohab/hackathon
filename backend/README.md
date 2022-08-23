@@ -10,8 +10,7 @@
 ## 2. .envファイルの作成
 1. ディレクトリに，`.env`を作成
 1. `.env`に先ほどコピーしたtokenを貼り付け
-```
-(.env)
+```python:.env
 SLACK_TOKEN={Here change bot token, end delete "{}"}
 ```
 ## 3. サーバー起動
