@@ -1,7 +1,13 @@
+import os
+from dotenv import load_dotenv
 from slack_sdk import WebClient
 
+# .envファイルの内容を読み込見込む
+load_dotenv()
+
+
 class Slack:
-    def __init__(self, token='xoxb-3651744076246-3980300448548-6woxRpI8gLRXw1gtNv4DrGAg', channel_id='C03U9T9T7C6'):
+    def __init__(self, token=os.environ['SLACK_TOKEN'], channel_id='C03U9T9T7C6'):
         self.channel_id = channel_id
         self.client = WebClient(token=token)
         self.users = list(list())

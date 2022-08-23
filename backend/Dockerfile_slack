@@ -15,3 +15,4 @@ RUN pip3 install flask_cors
 RUN pip3 install werkzeug
 
 RUN apt install -y libgl1-mesa-dev
+RUN pip3 install python-dotenv
