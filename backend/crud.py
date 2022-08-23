@@ -97,7 +97,7 @@ class Sqlite3:
         all_date = self.cur.fetchall()
         return all_date
 
-    def decrement_weight(self, id_, decay=0.25):
+    def decrement_weight(self, decay=0.25):
         sql = f"""
         UPDATE main SET weight = weight - {decay} WHERE has_sent = -1;
         """
@@ -108,7 +108,8 @@ class Sqlite3:
         sql = f"""
         SELECT id, img_path, weight FROM main WHERE (has_sent = -1) AND (wight = 0);
         """
-        unsent_zeros = self.cur.fetchall(sql)
+        self.cur.execute(sql)
+        unsent_zeros = self.cur.fetchall()
         return unsent_zeros
 
     def change_has_sent(self, condition: str):
