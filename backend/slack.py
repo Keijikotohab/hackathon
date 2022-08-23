@@ -28,7 +28,7 @@ class Slack:
 
     def _get_reaction(self, channel_id, ts):
         reactions = self.client.reactions_get(channel=channel_id, timestamp=ts)['message']['reactions']
-        print(reactions)
+        return reactions
 
     def _get_channle_history(self, channel_id, limit=1):
         msg = self.client.conversations_history(channel=channel_id, limit=limit)['messages']
@@ -59,23 +59,32 @@ class Slack:
     def _get_ims(self):
         return self.client.conversations_list(types='im')['channels']
 
-    def check_if_emojied(self, channel_id):
-        """
-        指定したチャンネルのメッセージのリアクションがあるか確認する
-        """
-        msgs = self._get_channle_history(channel_id, 1)
+    def give_ans(self, channel_id, num_threds=10):
+        msgs, _ = self._get_channle_history(channel_id, num_threds)
         for msg in msgs:
-            ts = msg['messages']['ts']
-            reactions = self._get_reaction(channel_id, ts)
-
-            for reaction in reactions:
-                if reaction['name'] == 'white_check_mark':
-                    continue
-            for reaction in reactions:
-                if reaction['name'] in ['+1', '-1']:
+            ts = msg['ts']
+            try:
+                reactions = msg['reactions']
+                print(reactions)
+            except:
+                pass
+            else:
+                if self.check_if_emojied(reactions):
                     self._reply_msg(channel_id, ts, 'それはXXだよ')
-                self._add_reaction(channel_id, 'white_check_mark', ts)
-        return False
+                    self._add_reaction(channel_id, ['white_check_mark'], ts)
+
+    def check_if_emojied(self, reactions):
+        """
+        指定したチャンネルのメッセージの✅がない，かつ，👍👎があるか判定
+        """
+        for reaction in reactions:
+            if reaction['name'] == 'white_check_mark':
+                return False
+        for reaction in reactions:
+            thum_upped =  reaction['name'] == '+1' and reaction['count'] > 1
+            thum_downed =  reaction['name'] == '-1' and reaction['count'] > 1
+            if thum_upped or thum_downed:
+                return True
 
     def send2users(self, msg, img_path):
         """
@@ -116,4 +125,4 @@ if __name__ == '__main__':
     #slack.send2users('./test.jpeg')
     slack.get_latest_reply()
     slack._get_channel_users()
-    slack.check_if_emojied(channel_id)
+    slack.give_ans(channel_id)
