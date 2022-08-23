@@ -11,6 +11,7 @@ from ai import FaceDetector
 logger = logging.getLogger("mylog")
 logger.setLevel(logging.DEBUG)
 
+
 # とりあえず仮のクラス
 class Index:
     def __init__(self):
@@ -21,6 +22,7 @@ class Index:
 
     def new_weight(self):
         return {"aa-aa-bb": 1, "bb-bb-cc": 2, "cc-cc-dd": 3}
+
 
 class Sqlite3:
     def __init__(self):
@@ -43,7 +45,7 @@ class Sqlite3:
         """
 
         img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
-        save_path = str((pathlib.Path("static") / 'imgs'/ file_name).with_suffix(".jpg"))
+        save_path = str((pathlib.Path("static") / 'imgs' / file_name).with_suffix(".jpg"))
         print(save_path)
         cv2.imwrite(save_path, img)
 
@@ -62,7 +64,8 @@ class Sqlite3:
         切り取った画像をフォルダに保存
         切り取った画像のデータをDBに保存
 
-        return {"id": uuid, "image_path": "http://127.0.0.1/static/imgs/"+uuid}
+        return [{"id": id, "image_path": "http://127.0.0.1/static/imgs/"+uuid},
+                {"id": id, "image_path": "http://127.0.0.1/static/imgs/"+uuid},]
         """
 
         clipped = self.clip(img_path)
@@ -87,6 +90,8 @@ class Sqlite3:
         """
         全部表示
         全部取り出し
+        return: -> [(1, '47187950-5be2-41e1-b58b-2d9c13ac987b', None, 0.0, -1, 0),
+                    (2, 'dc1e23fc-19c0-4bb8-acd5-38cf4615736e', None, 0.0, -1, 0)]
         """
 
         sql = f"""
@@ -103,8 +108,13 @@ class Sqlite3:
         """
         self.cur.execute(sql)
 
-    def fetch_unsent_zeros(self):
+    def fetch_unsent_zeros(self) -> list:
         # 一旦ファイル名だけ返す
+        """
+        return: -> [(1, '47187950-5be2-41e1-b58b-2d9c13ac987b',0.0),
+                    (2, 'dc1e23fc-19c0-4bb8-acd5-38cf4615736e',0.0)]
+        """
+
         sql = f"""
         SELECT id, img_path, weight FROM main WHERE (has_sent = -1) AND (weight = 0);
         """
@@ -122,7 +132,10 @@ class Sqlite3:
         """
         self.cur.execute(sql)
 
-    def fetch_step(self, id_):
+    def fetch_step(self, id_) -> int:
+        """
+        return: -> int
+        """
         sql = f"""
         SELECT step FROM main WHERE id = {id_};
         """

@@ -30,7 +30,7 @@ class FaceDetector:
         bboxes, points = self.model.predict(self.orgimg)
         self.bboxes = [[str(uuid4()), bbox] for bbox in bboxes[0]]
 
-    ## Re-Develop ME
+    # Re-Develop ME
     def clip(self) -> list:
         """
         bboxの情報をもとに，写真を切り抜く。
