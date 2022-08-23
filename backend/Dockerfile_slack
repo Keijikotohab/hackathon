@@ -6,3 +6,4 @@ RUN apt update -y \
 
 
 RUN pip3 install  -U pip slack slack_sdk aiohttp requests
+RUN pip3 install schedule
