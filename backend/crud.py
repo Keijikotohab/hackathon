@@ -106,7 +106,7 @@ class Sqlite3:
     def fetch_unsent_zeros(self):
         # 一旦ファイル名だけ返す
         sql = f"""
-        SELECT id, img_path, weight FROM main WHERE (has_sent = -1) AND (wight = 0);
+        SELECT id, img_path, weight FROM main WHERE (has_sent = -1) AND (weight = 0);
         """
         self.cur.execute(sql)
         unsent_zeros = self.cur.fetchall()

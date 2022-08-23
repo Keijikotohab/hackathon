@@ -21,6 +21,7 @@ services:
     tty: true
     volumes:
       - .:/app
+    working_dir: /app
   react-app:
     build:
       context: .

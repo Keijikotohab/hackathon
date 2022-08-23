@@ -5,6 +5,7 @@ from slack import Slack
 from crud import Sqlite3
 slack = Slack()
 sql = Sqlite3()
+sql.connect()
 
 def job():
     slack.give_ans(slack.channel_id)
@@ -41,7 +42,7 @@ def recommend():
     #sql.fetch_unsent_zeros()
     
 schedule.every(0.01).minutes.do(job)
-#schedule.every(0.01).minutes.do(recommend)#15分ごと
+schedule.every(0.01).minutes.do(recommend)#15分ごと
 
 while True:
     schedule.run_pending()
