@@ -16,7 +16,6 @@ import torch
 from PIL import ExifTags, Image
 from torch.utils.data import Dataset
 from tqdm import tqdm
-
 from utils.general import clean_str, xywh2xyxy, xyxy2xywh
 from utils.torch_utils import torch_distributed_zero_first
 

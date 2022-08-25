@@ -12,6 +12,7 @@
 1. `.env`に先ほどコピーしたtokenを貼り付け
 ```python:.env
 SLACK_TOKEN={Here change bot token, and delete "{}"}
+SLACK_CHANNEL_ID={Here change channel id, and delete "{}"}
 ```
 ## 3. サーバー起動
 1. `cd backend`

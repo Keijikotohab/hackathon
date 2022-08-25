@@ -9,8 +9,8 @@ import torch.nn as nn
 from PIL import Image, ImageDraw
 
 from ai.utils.datasets import letterbox
-from ai.utils.general import (make_divisible, non_max_suppression, scale_coords,
-                           xyxy2xywh)
+from ai.utils.general import (make_divisible, non_max_suppression,
+                              scale_coords, xyxy2xywh)
 from ai.utils.plots import color_list
 
 

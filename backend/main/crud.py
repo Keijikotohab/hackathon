@@ -1,7 +1,4 @@
 import logging
-
-from slack_utils.slack import Slack
-
 import pathlib
 import sqlite3
 
@@ -9,6 +6,7 @@ import cv2
 import numpy as np
 
 from ai.ai import FaceDetector
+from slack_utils.slack import Slack
 
 logger = logging.getLogger("mylog")
 logger.setLevel(logging.DEBUG)
