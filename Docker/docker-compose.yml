@@ -4,7 +4,7 @@ services:
     build:
       context: .
       dockerfile: ./Dockerfile
-    command: python3 main/main.py
+    command: python3 main.py
     ports:
       - 80:80
     volumes:
