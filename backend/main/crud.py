@@ -31,7 +31,6 @@ class Sqlite3:
 
     def connect(self):
         dbname = "/app/db/main.db"
-        breakpoint()
         self.conn = sqlite3.connect(dbname)
         self.cur = self.conn.cursor()
 

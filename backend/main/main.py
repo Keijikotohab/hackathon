@@ -34,7 +34,9 @@ def uploads_image():
             file.save(save_path)
 
             sql3.connect()
+            print('before')
             clipped_imgs = sql3.create(save_path)
+            print('after')
             sql3.close()
             print('clipped imgs:')
             print(clipped_imgs)
