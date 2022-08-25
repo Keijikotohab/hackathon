@@ -3,7 +3,7 @@ from flask import Flask, render_template, request, g, jsonify, redirect, url_for
 from flask_cors import CORS
 import os
 from werkzeug.utils import secure_filename
-from slack import Slack
+from slack_utils.slack import Slack
 app = Flask(__name__)
 CORS(app)
 

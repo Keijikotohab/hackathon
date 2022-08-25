@@ -17,3 +17,4 @@ RUN apt install -y libgl1-mesa-dev
 # pip3 は最後にまとめる。
 # キャッシュ使うために，とりあえず下に追加する
 RUN pip3 install python-dotenv
+RUN pip3 install schedule

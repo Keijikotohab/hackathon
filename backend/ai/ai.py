@@ -5,7 +5,7 @@ from uuid import uuid4
 import numpy as np
 from PIL import Image
 
-from face_detector import YoloDetector
+from ai.face_detector import YoloDetector
 
 logger = logging.getLogger("mylog")
 logger.setLevel(logging.DEBUG)

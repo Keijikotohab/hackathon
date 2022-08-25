@@ -2,7 +2,7 @@ import datetime
 import time
 import schedule
 from slack import Slack
-from crud import Sqlite3
+from main.crud import Sqlite3
 slack = Slack()
 sql = Sqlite3()
 sql.connect()

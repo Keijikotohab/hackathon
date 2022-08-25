@@ -8,10 +8,10 @@ import torch
 import torch.nn as nn
 from PIL import Image, ImageDraw
 
-from utils.datasets import letterbox
-from utils.general import (make_divisible, non_max_suppression, scale_coords,
+from ai.utils.datasets import letterbox
+from ai.utils.general import (make_divisible, non_max_suppression, scale_coords,
                            xyxy2xywh)
-from utils.plots import color_list
+from ai.utils.plots import color_list
 
 
 def autopad(k, p=None):  # kernel, padding

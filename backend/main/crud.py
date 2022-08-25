@@ -1,6 +1,6 @@
 import logging
 
-from slack import Slack
+from slack_utils.slack import Slack
 
 import pathlib
 import sqlite3
@@ -8,7 +8,7 @@ import sqlite3
 import cv2
 import numpy as np
 
-from ai import FaceDetector
+from ai.ai import FaceDetector
 
 logger = logging.getLogger("mylog")
 logger.setLevel(logging.DEBUG)
@@ -32,7 +32,8 @@ class Sqlite3:
         self.cur = None
 
     def connect(self):
-        dbname = "main.db"
+        dbname = "/app/db/main.db"
+        breakpoint()
         self.conn = sqlite3.connect(dbname)
         self.cur = self.conn.cursor()
 

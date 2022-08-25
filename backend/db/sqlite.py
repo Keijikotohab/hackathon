@@ -1,11 +1,11 @@
 import sqlite3
-from crud import Sqlite3
+from main.crud import Sqlite3
 
-dbname = "main.db"
+dbname = "/app/db/main.db"
 conn = sqlite3.connect(dbname)
 cur = conn.cursor()
 
-sql = 'drop table main'
+sql = 'drop table if exists main'
 
 cur.execute(sql)
 

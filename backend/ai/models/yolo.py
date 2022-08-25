@@ -11,13 +11,13 @@ import torch.nn as nn
 sys.path.append("./")  # to run '$ python *.py' files in subdirectories
 logger = logging.getLogger(__name__)
 
-from models.common import (C3, NMS, SPP, Bottleneck, BottleneckCSP, Concat,
+from ai.models.common import (C3, NMS, SPP, Bottleneck, BottleneckCSP, Concat,
                            Conv, DWConv, Focus, ShuffleV2Block, StemBlock,
                            autoShape)
-from models.experimental import CrossConv, MixConv2d
-from utils.autoanchor import check_anchor_order
-from utils.general import check_file, make_divisible, set_logging
-from utils.torch_utils import (copy_attr, fuse_conv_and_bn, initialize_weights,
+from ai.models.experimental import CrossConv, MixConv2d
+from ai.utils.autoanchor import check_anchor_order
+from ai.utils.general import check_file, make_divisible, set_logging
+from ai.utils.torch_utils import (copy_attr, fuse_conv_and_bn, initialize_weights,
                                model_info, scale_img, select_device,
                                time_synchronized)
 

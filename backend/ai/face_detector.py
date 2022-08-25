@@ -12,10 +12,10 @@ import torch
 import torch.nn as nn
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname("__file__"), "..")))
-from models.common import Conv
-from models.yolo import Model
-from utils.datasets import letterbox
-from utils.general import (check_img_size, filter_boxes,
+from ai.models.common import Conv
+from ai.models.yolo import Model
+from ai.utils.datasets import letterbox
+from ai.utils.general import (check_img_size, filter_boxes,
                            non_max_suppression_face, scale_coords,
                            scale_coords_landmarks)
 

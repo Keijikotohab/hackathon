@@ -1,5 +1,5 @@
 from slack_main import slack
-from crud import Sqlite3
+from ..main.crud import Sqlite3
 
 slack = Slack(token, channel_id)
 sq = Sqlite3()
