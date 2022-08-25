@@ -7,7 +7,7 @@ import Typography from "@mui/material/Typography";
 const Header = () => {
   return (
     <AppBar 
-      sx={{ backgroundColor: "#26cad0" }}
+      sx={{ backgroundColor: "#883333" }}
       position="static"
       color="inherit"
     >
@@ -25,7 +25,7 @@ const Header = () => {
         }}
         disableGutters
       >
-        <Typography sx={{color:"#fff",fontSize:20,fontWeight:"bold",marginTop:-1}}>リマインドアプリ</Typography>
+        <Typography sx={{color:"#fff",fontSize:20,fontWeight:"bold",marginTop:-1}}>モノオボエ。</Typography>
       </Toolbar>
     </AppBar>
   );
