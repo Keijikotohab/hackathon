@@ -39,12 +39,19 @@ class Slack:
 
     def _get_channle_history(self, channel_id, limit=1):
         msg = self.client.conversations_history(channel=channel_id, limit=limit)['messages']
-        ts = msg[0]['ts']
+        try:
+            ts = msg[0]['ts']
+        except:
+            ts = None
         return msg, ts
 
     def _get_replies(self, channel_id, ts, limit):
         replies = self.client.conversations_replies(channel=channel_id, ts=ts, limit=limit)['messages']
-        return replies
+        try:
+            ts = msg[0]['ts']
+        except:
+            ts = None
+        return replies, ts
 
     def _get_users(self):
         """
@@ -66,8 +73,8 @@ class Slack:
     def _get_ims(self):
         return self.client.conversations_list(types='im')['channels']
 
-    def give_ans(self, channel_id, num_threds=10):
-        msgs, _ = self._get_channle_history(channel_id, num_threds)
+    def give_ans(self, channel_id, limit=10):
+        msgs, _ = self._get_channle_history(channel_id, limit)
         for msg in msgs:
             ts = msg['ts']
             try:
@@ -88,8 +95,8 @@ class Slack:
             if reaction['name'] == 'white_check_mark':
                 return False
         for reaction in reactions:
-            thum_upped =  reaction['name'] == '+1' and reaction['count'] > 1
-            thum_downed =  reaction['name'] == '-1' and reaction['count'] > 1
+            thum_upped = reaction['name'] == '+1' and reaction['count'] > 1
+            thum_downed = reaction['name'] == '-1' and reaction['count'] > 1
             if thum_upped or thum_downed:
                 return True
 
@@ -106,14 +113,27 @@ class Slack:
     def send_img_msg(self, channel_id, img_path, msg):
         self._send_img(channel_id, img_path)
         self._send_msg(channel_id, msg)
-        _ , ts = self._get_channle_history(channel_id)
-        
+        _, ts = self._get_channle_history(channel_id)
+
     def send_img_msg_reaction(self, channel_id, img_path, msg):
         self._send_img(channel_id, img_path)
         self._send_msg(channel_id, msg)
-        _ , ts = self._get_channle_history(channel_id)
+        _, ts = self._get_channle_history(channel_id)
         self._add_reaction(channel_id, ['+1', '-1'], ts)
         self._get_reaction(channel_id, ts)
+
+    def check_stamp2reply(self):
+        """
+        チャンネル内のメッセージにリアクションがあるかチェックする
+        """
+        for im in self._get_ims():
+            print(im)
+            id_ = im['id']
+            msgs, ts = self._get_channle_history(id_)
+            if ts:
+                reply, ts = self._get_replies(id_, ts, 1)
+                reaction = self._get_reaction(id_, ts)
+
 
     def get_latest_reply(self):
         """
@@ -123,16 +143,15 @@ class Slack:
         for im in self._get_ims():
             id_ = im['id']
             latest_msg, ts = self._get_channle_history(id_)
-            reply = self._get_replies(id_, ts, 5)
-            replies.append(reply)
-            self._add_reaction(id_, ['+1', '-1'], ts)
-            self._get_reaction(id_, ts)
+            if ts:
+                reply, _ = self._get_replies(id_, ts, 5)
+                replies.append(reply)
+                self._add_reaction(id_, ['+1', '-1'], ts)
+                self._get_reaction(id_, ts)
 
         return replies
 
 if __name__ == '__main__':
     slack = Slack()
-    #slack.send2users('./test.jpeg')
     slack.get_latest_reply()
-    slack._get_channel_users()
-    slack.give_ans(channel_id)
+    slack.check_stamp2reply()
