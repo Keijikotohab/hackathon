@@ -8,14 +8,15 @@
 1. `Oauth&Permission` > `Bot User OAuth Token`をコピー
 
 ## 2. .envファイルの作成
-1. ディレクトリに，`.env`を作成
+1. backendディレクトリに，`.env`を作成
 1. `.env`に先ほどコピーしたtokenを貼り付け
+1. `.env`に，slackチャンネルのIDを貼り付け
 ```python:.env
 SLACK_TOKEN={Here change bot token, and delete "{}"}
 SLACK_CHANNEL_ID={Here change channel id, and delete "{}"}
 ```
 ## 3. サーバー起動
-1. `cd backend`
+1. `cd Docker`
 1. `docker compose up --build`
 
 ## 4. アプリアクセス
