@@ -14,7 +14,7 @@ services:
   slack:
     build:
       context: .
-      dockerfile: ./Dockerfile #_slack
+      dockerfile: ./Dockerfile
     command: python3 slack_utils/slack_send.py
     ports:
       - 90:90
