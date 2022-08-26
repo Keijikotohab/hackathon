@@ -29,7 +29,7 @@ services:
       dockerfile: Dockerfile_frontend
     volumes:
       - ../frontend:/usr/src/app
-    command: "yarn && yarn start"
+    command: "yarn start"
     ports:
       - 3000:3000
     stdin_open: true
