@@ -18,7 +18,10 @@ sql.connect()
 
 
 def job():
-    slack.give_ans(slack.channel_id)
+    msg_list = slack.get_latest_msgs()
+    slack.stamp2replies(slack.channel_id, msg_list)
+
+
 
 def recommend():
     sql.connect()

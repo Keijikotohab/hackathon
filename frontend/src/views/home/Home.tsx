@@ -3,7 +3,7 @@ import Button from '@mui/material/Button';
 import { Padding, ImageBox, ImageBoxBotton } from './style';
 import Logo from "../../images/asset_1.png"
 import Torii from "../../images/asset_2.png"
-import Moji from "../../images/asset_3.png"
+import Moji from "../../images/bunnkai.png"
 
 
 const Home: React.FC = () => {
@@ -22,7 +22,7 @@ const Home: React.FC = () => {
           <img style={{ width:380, marginRight: 0, marginTop:10 }}  src={Torii} />
         </ImageBoxBotton>
         <ImageBox>
-          <img style={{ width:280, marginTop: -356,marginLeft:-700 }}  src={Moji} />
+          <img style={{ width:280, marginTop: -340,marginLeft:-700 }}  src={Moji} />
         </ImageBox>
     </>
 

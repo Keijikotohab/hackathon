@@ -17,8 +17,8 @@ class Slack:
     def _send_msg(self, channel_id, msg):
         self.client.chat_postMessage(channel=channel_id, text=msg)
 
-    def _send_img(self, channel_id, img_path):
-        self.client.files_upload(channels=channel_id, file=img_path)
+    def _send_img_msg(self, channel_id, img_path, msg):
+        self.client.files_upload(channels=channel_id, file=img_path, initial_comment=msg)
 
     def _reply_msg(self, channel_id, ts, msg):
         self.client.chat_postMessage(channel=channel_id, text=msg, thread_ts=ts)
@@ -34,7 +34,10 @@ class Slack:
                 pass
 
     def _get_reaction(self, channel_id, ts):
-        reactions = self.client.reactions_get(channel=channel_id, timestamp=ts)['message']['reactions']
+        try:
+            reactions = self.client.reactions_get(channel=channel_id, timestamp=ts)['message']['reactions']
+        except:
+            reactions = None
         return reactions
 
     def _get_channle_history(self, channel_id, limit=1):
@@ -73,13 +76,19 @@ class Slack:
     def _get_ims(self):
         return self.client.conversations_list(types='im')['channels']
 
+    def _check_has_hand(self, reactions, threshold=1):
+        for reaction in reactions:
+            if reaction['name'] == '+1' and reaction['count'] > threshold:
+                return 'has_good'
+            elif reaction['name'] == '-1' and reaction['count'] > threshold:
+                return 'has_bad'
+
     def give_ans(self, channel_id, limit=10):
         msgs, _ = self._get_channle_history(channel_id, limit)
         for msg in msgs:
             ts = msg['ts']
             try:
                 reactions = msg['reactions']
-                print("リアクション",reactions)
             except:
                 pass
             else:
@@ -87,16 +96,22 @@ class Slack:
                     self._reply_msg(channel_id, ts, 'この人は〇〇です！知っていましたか？知っている人は👍、知らない人は👎をお願いします。')
                     self._add_reaction(channel_id, ['white_check_mark'], ts)
 
-    def check_if_emojied(self, reactions):
+    def _check_if_checked(self, reactions):
+        for reaction in reactions:
+            if reaction['name'] == 'white_check_mark':
+                return True
+        return False
+
+    def check_if_emojied(self, reactions, threshold=1):
         """
         指定したチャンネルのメッセージの✅がない，かつ，👍👎があるか判定
         """
+        checked = self._check_if_checked(reactions)
+        if checked:
+            return False
         for reaction in reactions:
-            if reaction['name'] == 'white_check_mark':
-                return False
-        for reaction in reactions:
-            thum_upped = reaction['name'] == '+1' and reaction['count'] > 1
-            thum_downed = reaction['name'] == '-1' and reaction['count'] > 1
+            thum_upped = reaction['name'] == '+1' and reaction['count'] > threshold
+            thum_downed = reaction['name'] == '-1' and reaction['count'] > threshold
             if thum_upped or thum_downed:
                 return True
 
@@ -111,13 +126,11 @@ class Slack:
             self._send_img(user_id, img_path)
 
     def send_img_msg(self, channel_id, img_path, msg):
-        self._send_img(channel_id, img_path)
-        self._send_msg(channel_id, msg)
+        self._send_img_msg(channel_id, img_path, msg)
         _, ts = self._get_channle_history(channel_id)
 
-    def send_img_msg_reaction(self, channel_id, img_path, msg):
-        self._send_img(channel_id, img_path)
-        self._send_msg(channel_id, msg)
+    def send_img_msg_reaction(self, channel_id, img_path, msg): 
+        self._send_img_msg(channel_id, img_path, msg)
         _, ts = self._get_channle_history(channel_id)
         self._add_reaction(channel_id, ['+1'], ts)
         self._get_reaction(channel_id, ts)
@@ -129,29 +142,65 @@ class Slack:
         for im in self._get_ims():
             print(im)
             id_ = im['id']
-            msgs, ts = self._get_channle_history(id_)
-            if ts:
-                reply, ts = self._get_replies(id_, ts, 1)
-                reaction = self._get_reaction(id_, ts)
+            msgs, ts = self._get_channle_history(id_, 10)
+            for msg in msgs:
+                ts = msg['ts']
+                if ts:
+                    reply, ts = self._get_replies(id_, ts, 1)
+                    reactions = reply[0]['reactions']
+                    checked = self._check_if_checked(reactions)
+                    self._add_reaction(id_, ['+1', '-1'], ts)
+                    if not checked:
+                        hand = self._check_has_hand(reactions)
+                        if hand == 'has_good':
+                            pass
+                            # update?
+                        elif hand == 'had_bad':
+                            pass
+                            # update?
 
-
-    def get_latest_reply(self):
+    def get_latest_msgs(self, limit=20):
         """
-        ユーザとbotのDMの最新のメッセージの中の最新のリプライを取得する
+        チャンネルの最新のメッセージを取得する
         """
-        replies = list()
-        for im in self._get_ims():
-            id_ = im['id']
-            latest_msg, ts = self._get_channle_history(id_)
-            if ts:
-                reply, _ = self._get_replies(id_, ts, 5)
-                replies.append(reply)
-                self._add_reaction(id_, ['+1', '-1'], ts)
-                self._get_reaction(id_, ts)
+        channel_id = self.channel_id
+        latest_msg, ts = self._get_channle_history(channel_id, limit)
+        return latest_msg
 
-        return replies
+    def stamp2replies(self, channel_id, msgs):
+        """
+        msgsへの返信を全てチェックする
+        グッドボタンか，バッドボタンがあるかチェックする
+        """
+        for msg in msgs:
+            ts = msg['ts']
+            try:
+                file_name = msg['files'][0]['name'].split('.')[0]
+            except:
+                pass
+            reply, _ = self._get_replies(channel_id, ts, 1)
+            try:
+                reply = reply[1]
+            except:
+                pass
+            else:
+                ts_reply = reply['ts']
+                self._add_reaction(channel_id, ['+1', '-1'], ts_reply)
+                reactions = self._get_reaction(channel_id, ts_reply)
+                if self._check_if_checked(reactions):
+                    continue
+                else:
+                    if self._check_has_hand(reactions) == 'has_good':
+                        print('good')
+                        self._reply_msg(channel_id, ts, '覚えてるの！めちゃめちゃいいね')
+                    elif self._check_has_hand(reactions) == 'has_bad':
+                        print('bad')
+                        self._reply_msg(channel_id, ts, 'あら，，，頑張って覚えよう')
 
 if __name__ == '__main__':
     slack = Slack()
-    slack.get_latest_reply()
-    slack.check_stamp2reply()
+    slack.stamp2replies(*slack.get_latest_msgs())
+    # slack.check_stamp2reply()
+    #slack.give_ans(slack.channel_id, 10)
+
+    # 今どのように画像を送っているか確認する

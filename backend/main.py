@@ -1,5 +1,4 @@
 import os
-
 from crud import Sqlite3
 from flask import (Flask, g, jsonify, redirect, render_template, request,
                    url_for)

@@ -15,6 +15,7 @@ import Yane from "../../images/yane.png"
 import SelectImage from "../../images/1.1gazousitei.png"
 import UpBotton from "../../images/2.2up.png"
 import TuikaBotton from "../../images/3.3tuika.png"
+import Description from "../../images/yokomikuzikai.png"
 
 
 let api = new Api();
@@ -122,43 +123,37 @@ const Main: React.FC = () => {
       <ImageBox>
           <img style={{ width:"100%", marginRight: 0 }}  src={Yane} />
       </ImageBox>
-      <ImageBox>
-          <img style={{ width:450, marginRight: 0 }}  src={SelectImage} />
-      </ImageBox>
-      <ImageBox>
-          <img style={{ width:450, marginRight: 0 }}  src={UpBotton} />
-      </ImageBox>
-      <ImageBox>
-          <img style={{ width:200, marginRight: 0 }}  src={TuikaBotton} />
-      </ImageBox>
-
+      {uploadStatus===0?
+        <ImageBox>
+          <img style={{ width:700, marginRight: 0 }}  src={SelectImage} />
+      </ImageBox>:<div/>
+        }
+      
 
       <Padding />
       <MainBox>
-      <Typography fontWeight="bold">{screenStatus===0?"新規追加フォーム":"名前入力フォーム"}</Typography>
-      <Divider sx={{ fontWeight: "bold" }} />
         {screenStatus===0?
         <>
-          {imageStatus === 1?<Alert sx={{marginTop:1, width:"50%", marginBottom: 0}} severity="error">写真を選択してください</Alert>:<div/>}
-          <Typography sx={{ fontWeight: "bold" }}>写真(※100M以下でお願いします)</Typography>
-          <Button variant="outlined" color="inherit" component="label" startIcon={<FileUploadIcon />}>
-            Upload
-            <input hidden type="file" onChange={handleChange} accept="image/*" multiple={false} />
-          </Button>
+          <ImageBox>
+            <Button sx={{marginTop:-15}} color="inherit" component="label" >
+            <img style={{ width:450, marginRight: 0 }}  src={UpBotton} />
+              <input hidden type="file" onChange={handleChange} accept="image/*" multiple={false} />
+            </Button>
+          </ImageBox>
+          
           <ImagePreviewBox>
             {displayedImages.map((displayedImage: any, index: any) => {
               return (
                 <div key={`${index}-li`}>
-                  <img style={{ width:"100%", marginRight: 20 }} src={displayedImage.image_path} alt="" key={`${index}-img`} />
-                  <p style={{ marginRight: 20 }}>{}</p>
+                  <img style={{ width:"100%", marginRight: 20, marginBottom:50, marginTop:-30 }} src={displayedImage.image_path} alt="" key={`${index}-img`} />
                 </div>
               )
             })}
           </ImagePreviewBox>
           <AddButtonBox>
             {loadingStatus===1?<CircularProgress />:
-              <Button onClick={()=>upLoad()} variant="outlined" color="inherit" component="label" startIcon={<AddIcon />}>
-                  追加
+              <Button onClick={()=>upLoad()} color="inherit" component="label">
+                  <img style={{ width:120, marginRight: 0,marginTop:-45 }}  src={TuikaBotton} />
               </Button>
             }
           </AddButtonBox>
@@ -197,6 +192,12 @@ const Main: React.FC = () => {
         :
         <div/>}
         </MainBox>
+        {uploadStatus===0?
+        <ImageBox>
+          <img style={{ width:850, marginRight: 0 }}  src={Description} />
+        </ImageBox>:<div/>
+        }
+
       </>
 
   )
