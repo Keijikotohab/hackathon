@@ -30,10 +30,15 @@ def job():
     good, bad = slack.stamp2replies(slack.channel_id,msg_list)
     for i in range(len(good)):
         next_send_time = sql.update_weight(good[i][1],True)
+        sql.set_has_not_sent(good[i][1])
+        slack._reply_msg(slack.channel_id,good[i][0],'覚えてきましたね！次は'+str(next_send_time)+'分後に通知します!')
 
 
     for i in range(len(bad)):
         next_send_time = sql.update_weight(bad[i][1],False)
+        sql.set_has_not_sent(bad[i][1])
+        slack._reply_msg(slack.channel_id,bad[i][0],'残念でした！次は'+str(next_send_time)+'分後に通知します!')
+
 
 
     sql.close()

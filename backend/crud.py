@@ -158,10 +158,13 @@ class Sqlite3:
     
     def set_has_sent(self, img_path):
         self.cur.execute("UPDATE main SET has_sent = ? WHERE img_path = ?", (1, img_path))
+    
+    def set_has_not_sent(self, img_path):
+        self.cur.execute("UPDATE main SET has_sent = ? WHERE img_path = ?", (-1, img_path))
 
     def update_weight(self, img_path, status):
         if status == True:
-            self.cur.execute("UPDATE step SET step = step + 1 WHERE img_path = ?", (img_path,))
+            self.cur.execute("UPDATE main SET step = step + 1 WHERE img_path = ?", (img_path,))
         self.cur.execute("Select step from main WHERE img_path = ?", (img_path,))
         step = self.cur.fetchone()[0]
         new_weight = 0
@@ -178,7 +181,7 @@ class Sqlite3:
         elif step == 5: #720時間
             new_weight += 43200
 
-        self.cur.execute("UPDATE weight SET weight = ? WHERE img_path = ?", (new_weight,img_path,))
+        self.cur.execute("UPDATE main SET weight = ? WHERE img_path = ?", (new_weight,img_path,))
         return new_weight
       
 
