@@ -2,5 +2,4 @@ img/*.*
 __py*__
 .DS*
 node_modules/
-backend/static/imgs/*
 .env

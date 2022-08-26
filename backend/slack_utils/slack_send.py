@@ -35,6 +35,7 @@ def recommend():
     for i in range(len(unsent_list)):
         slack.send_img_msg_reaction(slack.channel_id,"static/imgs/"+unsent_list[i][1]+".jpg", "この人は誰でしょう？")
         sql.set_has_sent(unsent_list[i][1])
+        slack.give_ans(slack.channel_id, msg_list)
     for i in range(len(unsent_list)):
         print("名前"+unsent_list[i][1])
     sql.close()

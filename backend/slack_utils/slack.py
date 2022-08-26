@@ -83,22 +83,39 @@ class Slack:
             elif reaction['name'] == '-1' and reaction['count'] > threshold:
                 return 'has_bad'
 
-    def give_ans(self, channel_id, limit=10):
+    def get_unsent_imgs(self, channel_id, limit=10):
+        """
+        名前を未送信のメッセージを取得して，tsと画像パスのリストを返す
+        return [[ts, img_path], [ts, img_path]]
+        """
         msgs, _ = self._get_channle_history(channel_id, limit)
+        li = list()
         for msg in msgs:
             ts = msg['ts']
+            file_name = msg['files'][0]['name'].split('.')[0]
             try:
                 reactions = msg['reactions']
             except:
-                pass
+                self._add_reaction(channel_id, ['white_check_mark'], ts)
+                li.append([ts, file_name])
             else:
-                if self.check_if_emojied(reactions):
-                    self._reply_msg(channel_id, ts, 'この人は〇〇です！知っていましたか？知っている人は👍、知らない人は👎をお願いします。')
+                if not self._check_if_checked(reactions, 'white_check_mark'):
                     self._add_reaction(channel_id, ['white_check_mark'], ts)
+        return li
 
-    def _check_if_checked(self, reactions):
+    def send_names(self, channel_id, name_list):
+        """
+        tsと名前のリストをもとに，名前をリプライする
+        args:
+            name_list: [[ts, name], [ts, name]]
+        """
+        for ts, name in name_list:
+            msg = f'これは{name}さんです'
+            self._reply_msg(channel_id, ts, msg)
+
+    def _check_if_checked(self, reactions, mark):
         for reaction in reactions:
-            if reaction['name'] == 'white_check_mark':
+            if reaction['name'] == mark:
                 return True
         return False
 
@@ -106,7 +123,7 @@ class Slack:
         """
         指定したチャンネルのメッセージの✅がない，かつ，👍👎があるか判定
         """
-        checked = self._check_if_checked(reactions)
+        checked = self._check_if_checked(reactions, 'white_check_mark')
         if checked:
             return False
         for reaction in reactions:
@@ -126,11 +143,11 @@ class Slack:
             self._send_img(user_id, img_path)
 
     def send_img_msg(self, channel_id, img_path, msg):
-        self._send_img_msg(self, channel_id, img_path, msg)
+        self._send_img_msg(channel_id, img_path, msg)
         _, ts = self._get_channle_history(channel_id)
 
     def send_img_msg_reaction(self, channel_id, img_path, name, msg='この人は誰でしょう'):
-        self._send_img_msg(self, channel_id, img_path, msg)
+        self._send_img_msg(channel_id, img_path, msg)
         _, ts = self._get_channle_history(channel_id)
         self._reply_msg(self, channel_id, ts, f'この人は{name}です！')
         self._add_reaction(channel_id, ['+1'], ts)
@@ -149,7 +166,7 @@ class Slack:
                 if ts:
                     reply, ts = self._get_replies(id_, ts, 1)
                     reactions = reply[0]['reactions']
-                    checked = self._check_if_checked(reactions)
+                    checked = self._check_if_checked(reactions, 'white_check_mark')
                     self._add_reaction(id_, ['+1', '-1'], ts)
                     if not checked:
                         hand = self._check_has_hand(reactions)
@@ -188,7 +205,7 @@ class Slack:
                 ts_reply = reply['ts']
                 self._add_reaction(channel_id, ['+1', '-1'], ts_reply)
                 reactions = self._get_reaction(channel_id, ts_reply)
-                if self._check_if_checked(reactions):
+                if self._check_if_checked(reactions, 'white_check_mark'):
                     continue
                 else:
                     if self._check_has_hand(reactions) == 'has_good':
@@ -201,6 +218,7 @@ class Slack:
 
 if __name__ == '__main__':
     slack = Slack()
-    slack.stamp2replies(*slack.get_latest_msgs())
-    # slack.check_stamp2reply()
-    # slack.give_ans(slack.channel_id, 10)
+    li = slack.get_unsent_imgs(slack.channel_id)
+    li = [[l[0], 'hori'] for l in li]
+    print(li)
+    slack.send_names(slack.channel_id, li)
