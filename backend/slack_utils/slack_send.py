@@ -21,12 +21,14 @@ def job():
     sql.connect()
     send_name_list = []
     li = slack.get_unsent_imgs(slack.channel_id)
-
     for i in range(len(li)):
         send_name_list.append([li[i][0],sql.change_path_to_name(li[i][1])])
     print(send_name_list)
-    
     slack.send_names(slack.channel_id, send_name_list)
+
+    msg_list = slack.get_latest_msgs()
+    slack.stamp2replies(slack.channel_id,msg_list)
+
 
     sql.close()
 
@@ -57,7 +59,7 @@ def recommend():
     #print(sql.fetch_unsent_zeros())
 
 
-schedule.every(0.05).minutes.do(job)
+schedule.every(0.01).minutes.do(job)
 schedule.every(0.1).minutes.do(recommend)
 
 while True:

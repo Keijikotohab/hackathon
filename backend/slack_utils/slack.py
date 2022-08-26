@@ -153,8 +153,6 @@ class Slack:
     def send_img_msg_reaction(self, channel_id, img_path, name, msg='この人は誰でしょう'):
         self._send_img_msg(channel_id, img_path, msg)
         _, ts = self._get_channle_history(channel_id)
-        self._reply_msg(channel_id, ts, f'この人は{name}です！')
-        self._add_reaction(channel_id, ['+1'], ts)
         self._get_reaction(channel_id, ts)
 
     def check_stamp2reply(self):
