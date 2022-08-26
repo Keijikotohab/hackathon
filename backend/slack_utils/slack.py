@@ -126,12 +126,13 @@ class Slack:
             self._send_img(user_id, img_path)
 
     def send_img_msg(self, channel_id, img_path, msg):
-        self._send_img_msg(channel_id, img_path, msg)
+        self._send_img_msg(self, channel_id, img_path, msg)
         _, ts = self._get_channle_history(channel_id)
 
-    def send_img_msg_reaction(self, channel_id, img_path, msg): 
-        self._send_img_msg(channel_id, img_path, msg)
+    def send_img_msg_reaction(self, channel_id, img_path, name, msg='この人は誰でしょう'):
+        self._send_img_msg(self, channel_id, img_path, msg)
         _, ts = self._get_channle_history(channel_id)
+        self._reply_msg(self, channel_id, ts, f'この人は{name}です！')
         self._add_reaction(channel_id, ['+1'], ts)
         self._get_reaction(channel_id, ts)
 
@@ -164,8 +165,8 @@ class Slack:
         チャンネルの最新のメッセージを取得する
         """
         channel_id = self.channel_id
-        latest_msg, ts = self._get_channle_history(channel_id, limit)
-        return latest_msg
+        latest_msgs, ts = self._get_channle_history(channel_id, limit)
+        return latest_msgs
 
     def stamp2replies(self, channel_id, msgs):
         """
@@ -197,10 +198,9 @@ class Slack:
                         print('bad')
                         self._reply_msg(channel_id, ts, 'あら，，，頑張って覚えよう')
 
+
 if __name__ == '__main__':
     slack = Slack()
     slack.stamp2replies(*slack.get_latest_msgs())
     # slack.check_stamp2reply()
-    #slack.give_ans(slack.channel_id, 10)
-
-    # 今どのように画像を送っているか確認する
+    # slack.give_ans(slack.channel_id, 10)
