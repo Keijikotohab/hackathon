@@ -76,14 +76,27 @@ class Slack:
     def _get_ims(self):
         return self.client.conversations_list(types='im')['channels']
 
-    def _check_has_hand(self, reactions, threshold=1):
+    def _check_has_good(self, reactions, threshold=1):
         if reactions is None:
             return False
         for reaction in reactions:
             if reaction['name'] == '+1' and reaction['count'] > threshold:
                 return 'has_good'
-            elif reaction['name'] == '-1' and reaction['count'] > threshold:
+
+    def _check_has_bad(self, reactions, threshold=1):
+        if reactions is None:
+            return False
+        for reaction in reactions:
+            if reaction['name'] == '-1' and reaction['count'] > threshold:
                 return 'has_bad'
+
+    def _check_has_eyes(self, reactions, threshold=0):
+        if reactions is None:
+            return False
+        for reaction in reactions:
+            if reaction['name'] == 'eyes' and reaction['count'] > threshold:
+                return True
+        return False
 
     def get_unsent_imgs(self, channel_id, limit=10):
         """
@@ -103,7 +116,8 @@ class Slack:
                 # li.append([ts, file_name])
             else:
                 checked = self._check_if_checked(reactions, 'white_check_mark')
-                eyed = self._check_if_checked(reactions, 'eyes')
+                eyed = self._check_has_eyes(reactions)
+                print(checked, eyed)
                 if (not checked) and eyed:
                     li.append([ts, file_name])
         print(li)
@@ -219,11 +233,13 @@ class Slack:
         """
         msgsへの返信を全てチェックする
         グッドボタンか，バッドボタンがあるかチェックする
+        return [[ts, uuid], [ts, uuid]], [[ts, uuid], [ts, uuid]]
         """
         good_list = []
         bad_list = []
         for msg in msgs:
             ts = msg['ts']
+            print(ts)
             reply, _ = self._get_replies(channel_id, ts, 5)
             try:
                 reply = reply[1]
@@ -233,19 +249,22 @@ class Slack:
                 ts_reply = reply['ts']
                 reactions = self._get_reaction(channel_id, ts_reply)
                 if self._check_if_checked(reactions, 'white_check_mark'):
+                    print('checked')
                     continue
                 else:
                     self._add_reaction(channel_id, ['+1', '-1'], ts_reply) 
-                    if self._check_has_hand(reactions) == 'has_good':
+                    good = self._check_has_good(reactions) == 'has_good'
+                    bad = self._check_has_bad(reactions) == 'has_bad'
+                    if good:
                         print('good')
                         self._reply_msg(channel_id, ts, '覚えてるの！めちゃめちゃいいね')
                         self._add_reaction(channel_id, ['white_check_mark'], ts_reply)
-                        good_list.append(['has_good', msg['files'][0]['name'].split('.')[0]])
-                    elif self._check_has_hand(reactions) == 'has_bad':
+                        good_list.append([ts, msg['files'][0]['name'].split('.')[0]])
+                    elif bad:
                         print('bad')
                         self._reply_msg(channel_id, ts, 'あら，，，頑張って覚えよう')
                         self._add_reaction(channel_id, ['white_check_mark'], ts_reply)
-                        bad_list.append(['has_bad', msg['files'][0]['name'].split('.')[0]])
+                        bad_list.append([ts, msg['files'][0]['name'].split('.')[0]])
         return good_list, bad_list
 
 
