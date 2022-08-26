@@ -32,3 +32,11 @@ export const RegisterButtonBox = styled("div")(() => ({
   marginBottom: 30
   }));
   
+export const ImageBox = styled("div")(() => ({
+  textAlign: "center", 
+}));
+
+export const ImageBoxBotton = styled("div")(() => ({
+  textAlign: "center", 
+  cursor: "pointer"
+}));

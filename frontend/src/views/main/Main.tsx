@@ -8,9 +8,15 @@ import FileUploadIcon from '@mui/icons-material/FileUpload';
 import AddIcon from '@mui/icons-material/Add';
 import CircularProgress from '@mui/material/CircularProgress';
 import Alert from '@mui/material/Alert';
-import { HeaderBox, Padding, MainBox, ImagePreviewBox, AddButtonBox, RegisterButtonBox } from './style';
+import { HeaderBox, Padding, MainBox, ImagePreviewBox, AddButtonBox, RegisterButtonBox, ImageBox, } from './style';
 import { DisplayedImage, DisplayedIndividualImage, ImageName } from "../../types/types"
 import { Api } from "../../api/Api"
+import Yane from "../../images/yane.png"
+import SelectImage from "../../images/1.1gazousitei.png"
+import UpBotton from "../../images/2.2up.png"
+import TuikaBotton from "../../images/3.3tuika.png"
+
+
 let api = new Api();
 const sleep = (ms:number) => new Promise((resolve) => setTimeout(resolve, ms));
 let imageList:DisplayedIndividualImage[] = []
@@ -112,9 +118,21 @@ const Main: React.FC = () => {
 
   return (
     <>
-      <HeaderBox>
-        <Header />
-      </HeaderBox>
+
+      <ImageBox>
+          <img style={{ width:"100%", marginRight: 0 }}  src={Yane} />
+      </ImageBox>
+      <ImageBox>
+          <img style={{ width:450, marginRight: 0 }}  src={SelectImage} />
+      </ImageBox>
+      <ImageBox>
+          <img style={{ width:450, marginRight: 0 }}  src={UpBotton} />
+      </ImageBox>
+      <ImageBox>
+          <img style={{ width:200, marginRight: 0 }}  src={TuikaBotton} />
+      </ImageBox>
+
+
       <Padding />
       <MainBox>
       <Typography fontWeight="bold">{screenStatus===0?"新規追加フォーム":"名前入力フォーム"}</Typography>

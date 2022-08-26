@@ -84,7 +84,7 @@ class Slack:
                 pass
             else:
                 if self.check_if_emojied(reactions):
-                    self._reply_msg(channel_id, ts, 'それはXXだよ')
+                    self._reply_msg(channel_id, ts, 'この人は〇〇です！知っていましたか？知っている人は👍、知らない人は👎をお願いします。')
                     self._add_reaction(channel_id, ['white_check_mark'], ts)
 
     def check_if_emojied(self, reactions):
@@ -119,7 +119,7 @@ class Slack:
         self._send_img(channel_id, img_path)
         self._send_msg(channel_id, msg)
         _, ts = self._get_channle_history(channel_id)
-        self._add_reaction(channel_id, ['+1', '-1'], ts)
+        self._add_reaction(channel_id, ['+1'], ts)
         self._get_reaction(channel_id, ts)
 
     def check_stamp2reply(self):

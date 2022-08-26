@@ -102,9 +102,9 @@ class Sqlite3:
         all_date = self.cur.fetchall()
         return all_date
 
-    def decrement_weight(self, decay=0.25):
+    def decrement_weight(self):
         sql = f"""
-        UPDATE main SET weight = weight - {decay} WHERE has_sent = -1;
+        UPDATE main SET weight = weight - 1 WHERE has_sent = -1;
         """
         self.cur.execute(sql)
 
@@ -151,6 +151,13 @@ class Sqlite3:
         UPDATE main SET {field_name} = {value} WHERE id = {id_};
         """
         self.cur.execute(sql)
+
+    def set_name(self, img_path, value: str):
+        self.cur.execute("UPDATE main SET name = ? WHERE img_path = ?", (value, img_path))
+        self.cur.execute("UPDATE main SET weight = ? WHERE img_path = ?", (3, img_path))
+    
+    def set_has_sent(self, img_path):
+        self.cur.execute("UPDATE main SET has_sent = ? WHERE img_path = ?", (1, img_path))
 
     # 今回は最悪作らない
     def delete_all_items(self):

@@ -1,6 +1,6 @@
 import sqlite3
 
-from main.crud import Sqlite3
+from crud import Sqlite3
 
 dbname = "/app/db/main.db"
 conn = sqlite3.connect(dbname)
@@ -19,10 +19,12 @@ rows = cur.fetchall()
 
 l = len(rows)+1
 # 好きに変えてください
-sql = f'INSERT INTO main values({l}, "img_path{l}", "name{l}", 0, -1, 0)'
+
+sql = f'UPDATE main SET weight = weight - 1 WHERE has_sent = -1;'
 cur.execute(sql)
 conn.commit()
 print('insert success')
+
 
 sql = 'SELECT * FROM main'
 cur.execute(sql)

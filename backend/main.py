@@ -58,10 +58,14 @@ def check():
     print(len(request.json))
     print(request.json[0]["name"])
     print(request.json[1]["name"])
+
     for i in range(len(request.json)):
-        id_ = slack.channel_id # 本来はDBから取得する
+        id_ = slack.channel_id
         img_path = "static/imgs/"+request.json[i]["id"]+".jpg"
         msg = request.json[i]["name"]+"さんが登録されました。皆さん名前を覚えましょう。"
+        sql3.connect()
+        sql3.set_name(request.json[i]["id"], request.json[i]["name"])
+        sql3.close()
         slack.send_img_msg(id_, img_path, msg)
     return ""
 
