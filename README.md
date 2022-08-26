@@ -14,6 +14,7 @@
 ```python:.env
 SLACK_TOKEN={Here change bot token, and delete "{}"}
 SLACK_CHANNEL_ID={Here change channel id, and delete "{}"}
+SLACK_USER_CHANNEL_ID={Here change user channel id between MonoOboe, and delete "{}"}
 ```
 ## 3. サーバー起動
 1. `cd Docker`
