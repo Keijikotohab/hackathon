@@ -77,6 +77,8 @@ class Slack:
         return self.client.conversations_list(types='im')['channels']
 
     def _check_has_hand(self, reactions, threshold=1):
+        if reactions is None:
+            return False
         for reaction in reactions:
             if reaction['name'] == '+1' and reaction['count'] > threshold:
                 return 'has_good'
@@ -116,10 +118,11 @@ class Slack:
         for ts, name in name_list:
             msg = f'これは{name}さんです'
             self._reply_msg(channel_id, ts, msg)
+            self._add_reaction(channel_id, ['white_check_mark'], ts)
 
     def _check_if_checked(self, reactions, mark):
         if reactions is None:
-            return False    
+            return False
         for reaction in reactions:
             if reaction['name'] == mark:
                 return True
@@ -189,37 +192,39 @@ class Slack:
         latest_msgs, ts = self._get_channle_history(self.channel_id, limit)
         return latest_msgs
 
-    def check_first_stamp(self, channel_id, msgs):
-        """
-        １つ目のリプライに対するスタンプをチェックする
-        """
-        li_good = []
-        li_bad = []
-        for msg in msgs:
-            ts = msg['ts']
-            file_name = msg['files'][0]['name'].split('.')[0]
-            reply, _ = self._get_replies(channel_id, ts, 1)
-            try:
-                reply = reply[1]
-            except:
-                pass
-            else:
-                ts_reply = reply['ts']
-                reactions = self._get_reaction(channel_id, ts_reply)
-                if self._check_has_hand(reactions, threshold=1) == 'has_good':
-                    li_good.append(['has_good', file_name])
-                if self._check_has_hand(reactions, threshold=1) == 'has_bad':
-                    li_bad.append(['has_bad', file_name])
-        return li_good, li_bad
+   # def check_first_stamp(self, channel_id, msgs):
+   #     """
+   #     １つ目のリプライに対するスタンプをチェックする
+   #     """
+   #     li_good = []
+   #     li_bad = []
+   #     for msg in msgs:
+   #         ts = msg['ts']
+   #         file_name = msg['files'][0]['name'].split('.')[0]
+   #         reply, _ = self._get_replies(channel_id, ts, 1)
+   #         try:
+   #             reply = reply[1]
+   #         except:
+   #             pass
+   #         else:
+   #             ts_reply = reply['ts']
+   #             reactions = self._get_reaction(channel_id, ts_reply)
+   #             if self._check_has_hand(reactions, threshold=1) == 'has_good':
+   #                 li_good.append(['has_good', file_name])
+   #             if self._check_has_hand(reactions, threshold=1) == 'has_bad':
+   #                 li_bad.append(['has_bad', file_name])
+   #     return li_good, li_bad
 
     def stamp2replies(self, channel_id, msgs):
         """
         msgsへの返信を全てチェックする
         グッドボタンか，バッドボタンがあるかチェックする
         """
+        good_list = []
+        bad_list = []
         for msg in msgs:
             ts = msg['ts']
-            reply, _ = self._get_replies(channel_id, ts, 1)
+            reply, _ = self._get_replies(channel_id, ts, 5)
             try:
                 reply = reply[1]
             except:
@@ -230,15 +235,18 @@ class Slack:
                 if self._check_if_checked(reactions, 'white_check_mark'):
                     continue
                 else:
-                    self._add_reaction(channel_id, ['+1', '-1'], ts_reply) # なぜかリプライに対してリアクションがつかない
+                    self._add_reaction(channel_id, ['+1', '-1'], ts_reply) 
                     if self._check_has_hand(reactions) == 'has_good':
                         print('good')
                         self._reply_msg(channel_id, ts, '覚えてるの！めちゃめちゃいいね')
-                        self._add_reaction(channel_id, ['white_check_mark'], ts)
+                        self._add_reaction(channel_id, ['white_check_mark'], ts_reply)
+                        good_list.append(['has_good', msg['files'][0]['name'].split('.')[0]])
                     elif self._check_has_hand(reactions) == 'has_bad':
                         print('bad')
                         self._reply_msg(channel_id, ts, 'あら，，，頑張って覚えよう')
-                        self._add_reaction(channel_id, ['white_check_mark'], ts)
+                        self._add_reaction(channel_id, ['white_check_mark'], ts_reply)
+                        bad_list.append(['has_bad', msg['files'][0]['name'].split('.')[0]])
+        return good_list, bad_list
 
 
 if __name__ == '__main__':
@@ -247,5 +255,7 @@ if __name__ == '__main__':
     li = [[l[0], 'hori'] for l in li]
     print(li)
     slack.send_names(slack.channel_id, li)
-    msgs = slack.get_latest_msgs()
-    slack.stamp2replies(slack.channel_id, msgs)
+    msgs = slack.get_latest_msgs(1)
+    good, bad = slack.stamp2replies(slack.channel_id, msgs)
+    print(good)
+    print(bad)
