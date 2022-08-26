@@ -26,3 +26,7 @@ export const AddButtonBox = styled("div")(() => ({
 textAlign: "center", 
 marginTop: 10
 }));
+
+export const ImageBox = styled("div")(() => ({
+  textAlign: "center", 
+}));

@@ -33,11 +33,11 @@ def recommend():
     print(sql.fetch_unsent_zeros())
     unsent_list = sql.fetch_unsent_zeros()
     for i in range(len(unsent_list)):
-        slack.send_img_msg_reaction(slack.channel_id,"static/imgs/"+unsent_list[i][1]+".jpg", "この人は誰でしょう？")
+        slack.send_img_msg_reaction(slack.channel_id,"static/imgs/"+unsent_list[i][1]+".jpg", unsent_list[i][3])
         sql.set_has_sent(unsent_list[i][1])
         slack.give_ans(slack.channel_id, msg_list)
     for i in range(len(unsent_list)):
-        print("名前"+unsent_list[i][1])
+        print("名前"+unsent_list[i][3])
     sql.close()
 
     print("実行")

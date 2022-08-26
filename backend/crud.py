@@ -116,7 +116,7 @@ class Sqlite3:
         """
 
         sql = f"""
-        SELECT id, img_path, weight FROM main WHERE (has_sent = -1) AND (weight = 0);
+        SELECT id, img_path, weight, name FROM main WHERE (has_sent = -1) AND (weight = 0);
         """
         self.cur.execute(sql)
         unsent_zeros = self.cur.fetchall()

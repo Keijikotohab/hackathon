@@ -16,7 +16,8 @@ import SelectImage from "../../images/1.1gazousitei.png"
 import UpBotton from "../../images/2.2up.png"
 import TuikaBotton from "../../images/3.3tuika.png"
 import Description from "../../images/yokomikuzikai.png"
-
+import Touroku from "../../images/touroku.png"
+import InputNameText from "../../images/namaenyuuryoku.png"
 
 let api = new Api();
 const sleep = (ms:number) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -123,10 +124,10 @@ const Main: React.FC = () => {
       <ImageBox>
           <img style={{ width:"100%", marginRight: 0 }}  src={Yane} />
       </ImageBox>
-      {uploadStatus===0?
+      {screenStatus===0?
         <ImageBox>
           <img style={{ width:700, marginRight: 0 }}  src={SelectImage} />
-      </ImageBox>:<div/>
+        </ImageBox>:<div/>
         }
       
 
@@ -167,9 +168,8 @@ const Main: React.FC = () => {
               return (
                 <div key={`${index}-li`}>
                   <img style={{ width:"100%", marginRight: 20 }} src={urlimage.image_path} alt="" key={`${index}-img`} />
-                  <p style={{ marginRight: 20 }}>{urlimage.string}</p>
-                  {nameStatus === 1?<Alert sx={{marginTop:1, width:"50%", marginBottom: -2}} severity="error">名前を入力してください</Alert>:nameStatus === 2?<Alert sx={{marginTop:1, width:"50%", marginBottom: -2}} severity="error">文字数は20文字以下でお願いします</Alert>:<div/>}
-                  <Typography sx={{ fontWeight: "bold", marginTop: 0 }}>名前(※20文字以下でお願いします)</Typography>
+                  <p style={{ marginRight: 20 }}>{urlimage.string}</p>                  
+                  <img style={{ width:220, marginRight: 0,marginTop:-45 }}  src={InputNameText} />
                   <TextField
                     sx={{ width: "100%", marginBottom: 2 }}
                     id="outlined-size-small"
@@ -183,8 +183,8 @@ const Main: React.FC = () => {
           </ImagePreviewBox>
           <RegisterButtonBox>
           {uploadStatus===1?<CircularProgress />:
-              <Button onClick={()=>register()} variant="outlined" color="inherit" component="label" startIcon={<AddIcon />}>
-                  登録
+              <Button onClick={()=>register()} color="inherit" component="label">
+                  <img style={{ width:120, marginRight: 0,marginTop: 0 }}  src={Touroku} />
               </Button>
             }
           </RegisterButtonBox>
@@ -192,7 +192,8 @@ const Main: React.FC = () => {
         :
         <div/>}
         </MainBox>
-        {uploadStatus===0?
+        
+        {screenStatus===0?
         <ImageBox>
           <img style={{ width:850, marginRight: 0 }}  src={Description} />
         </ImageBox>:<div/>
