@@ -27,7 +27,13 @@ def job():
     slack.send_names(slack.channel_id, send_name_list)
 
     msg_list = slack.get_latest_msgs()
-    slack.stamp2replies(slack.channel_id,msg_list)
+    good, bad = slack.stamp2replies(slack.channel_id,msg_list)
+    for i in range(len(good)):
+        next_send_time = sql.update_weight(good[i][1],True)
+
+
+    for i in range(len(bad)):
+        next_send_time = sql.update_weight(bad[i][1],False)
 
 
     sql.close()
