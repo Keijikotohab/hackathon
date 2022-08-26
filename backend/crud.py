@@ -159,6 +159,11 @@ class Sqlite3:
     def set_has_sent(self, img_path):
         self.cur.execute("UPDATE main SET has_sent = ? WHERE img_path = ?", (1, img_path))
 
+    def change_path_to_name(self, img_path):
+        self.cur.execute("Select name from main WHERE img_path = ?", (img_path,))
+        return self.cur.fetchone()[0]
+
+
     # 今回は最悪作らない
     def delete_all_items(self):
         sql = f"""

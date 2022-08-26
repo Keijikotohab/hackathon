@@ -18,8 +18,17 @@ sql.connect()
 
 
 def job():
-    msg_list = slack.get_latest_msgs()
-    slack.stamp2replies(slack.channel_id, msg_list)
+    sql.connect()
+    send_name_list = []
+    li = slack.get_unsent_imgs(slack.channel_id)
+
+    for i in range(len(li)):
+        send_name_list.append([li[i][0],sql.change_path_to_name(li[i][1])])
+    print(send_name_list)
+    
+    slack.send_names(slack.channel_id, send_name_list)
+
+    sql.close()
 
 
 
@@ -35,7 +44,6 @@ def recommend():
     for i in range(len(unsent_list)):
         slack.send_img_msg_reaction(slack.channel_id,"static/imgs/"+unsent_list[i][1]+".jpg", unsent_list[i][3])
         sql.set_has_sent(unsent_list[i][1])
-        slack.give_ans(slack.channel_id, msg_list)
     for i in range(len(unsent_list)):
         print("名前"+unsent_list[i][3])
     sql.close()
