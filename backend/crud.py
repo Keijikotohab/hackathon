@@ -158,6 +158,37 @@ class Sqlite3:
     
     def set_has_sent(self, img_path):
         self.cur.execute("UPDATE main SET has_sent = ? WHERE img_path = ?", (1, img_path))
+    
+    def set_has_not_sent(self, img_path):
+        self.cur.execute("UPDATE main SET has_sent = ? WHERE img_path = ?", (-1, img_path))
+
+    def update_weight(self, img_path, status):
+        if status == True:
+            self.cur.execute("UPDATE main SET step = step + 1 WHERE img_path = ?", (img_path,))
+        self.cur.execute("Select step from main WHERE img_path = ?", (img_path,))
+        step = self.cur.fetchone()[0]
+        new_weight = 0
+        if step == 0: #15分
+            new_weight += 15  
+        elif step == 1: #1時間
+            new_weight += 60
+        elif step == 2: #6時間
+            new_weight += 360 
+        elif step == 3: #24時間
+            new_weight += 1440
+        elif step == 4: #144時間
+            new_weight += 8640
+        elif step == 5: #720時間
+            new_weight += 43200
+
+        self.cur.execute("UPDATE main SET weight = ? WHERE img_path = ?", (new_weight,img_path,))
+        return new_weight
+      
+
+    def change_path_to_name(self, img_path):
+        self.cur.execute("Select name from main WHERE img_path = ?", (img_path,))
+        return self.cur.fetchone()[0]
+
 
     # 今回は最悪作らない
     def delete_all_items(self):
