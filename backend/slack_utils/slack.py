@@ -96,11 +96,15 @@ class Slack:
             try:
                 reactions = msg['reactions']
             except:
-                self._add_reaction(channel_id, ['white_check_mark'], ts)
-                li.append([ts, file_name])
+                pass
+                # self._add_reaction(channel_id, ['white_check_mark'], ts)
+                # li.append([ts, file_name])
             else:
-                if not self._check_if_checked(reactions, 'white_check_mark'):
+                checked = self._check_if_checked(reactions, 'white_check_mark')
+                eyed = self._check_if_checked(reactions, 'eyes')
+                if not checked and eyed:
                     self._add_reaction(channel_id, ['white_check_mark'], ts)
+                    li.append([ts, file_name])
         return li
 
     def send_names(self, channel_id, name_list):
