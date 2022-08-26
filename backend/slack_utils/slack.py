@@ -8,8 +8,9 @@ load_dotenv()
 
 
 class Slack:
-    def __init__(self, token=os.environ['SLACK_TOKEN'], channel_id='C03U9T9T7C6'):
-        self.channel_id = channel_id
+    def __init__(self, token=os.environ['SLACK_TOKEN'], channel_id=os.environ['SLACK_USER_CHANNEL_ID']):
+        self.channel_id = os.environ['SLACK_CHANNEL_ID']
+        self.user_channel_id = os.environ['SLACK_USER_CHANNEL_ID']
         self.client = WebClient(token=token)
         self.users = list(list())
         self._get_users()
@@ -113,8 +114,6 @@ class Slack:
                 reactions = msg['reactions']
             except:
                 pass
-                # self._add_reaction(channel_id, ['white_check_mark'], ts)
-                # li.append([ts, file_name])
             else:
                 checked = self._check_if_checked(reactions, 'white_check_mark')
                 eyed = self._check_has_eyes(reactions)
@@ -200,7 +199,7 @@ class Slack:
         """
         チャンネルの最新のメッセージを取得する
         """
-        channel_id = self.channel_id
+        channel_id = self.user_channel_id
         latest_msgs, ts = self._get_channle_history(channel_id, limit)
         return latest_msgs
 
@@ -242,7 +241,6 @@ class Slack:
                         self._add_reaction(channel_id, ['white_check_mark'], ts_reply)
                         bad_list.append([ts, msg['files'][0]['name'].split('.')[0]])
         return good_list, bad_list
-
 
 
 if __name__ == '__main__':
