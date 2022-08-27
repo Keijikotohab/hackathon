@@ -18,6 +18,7 @@ sql.connect()
 def job():
     sql.connect()
     send_name_list = []
+    print(slack.user_channel_id)
     li = slack.get_unsent_imgs(slack.user_channel_id)
     for i in range(len(li)):
         send_name_list.append([li[i][0],sql.change_path_to_name(li[i][1])])
@@ -50,16 +51,11 @@ def recommend():
 
 
     sql.connect()
-    print(sql.fetch_unsent_zeros())
     unsent_list = sql.fetch_unsent_zeros()
     for i in range(len(unsent_list)):
-        slack.send_img_msg_reaction(slack.channel_id,"static/imgs/"+unsent_list[i][1]+".jpg", unsent_list[i][3])
+        slack.send_img_msg_reaction(slack.user_channel_id,"static/imgs/"+unsent_list[i][1]+".jpg", unsent_list[i][3])
         sql.set_has_sent(unsent_list[i][1])
-    for i in range(len(unsent_list)):
-        print("名前"+unsent_list[i][3])
     sql.close()
-
-    print("実行")
 
     # 【15分に1回の更新部分】
     #sql.decrement_weight()#
@@ -68,8 +64,8 @@ def recommend():
     #print(sql.fetch_unsent_zeros())
 
 
-schedule.every(0.01).minutes.do(job)
-schedule.every(0.1).minutes.do(recommend)
+schedule.every(0.1).seconds.do(job)
+schedule.every(1).minutes.do(recommend)
 
 while True:
     schedule.run_pending()

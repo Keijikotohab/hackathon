@@ -154,7 +154,7 @@ class Sqlite3:
 
     def set_name(self, img_path, value: str):
         self.cur.execute("UPDATE main SET name = ? WHERE img_path = ?", (value, img_path))
-        self.cur.execute("UPDATE main SET weight = ? WHERE img_path = ?", (3, img_path))
+        self.cur.execute("UPDATE main SET weight = ? WHERE img_path = ?", (15, img_path))
     
     def set_has_sent(self, img_path):
         self.cur.execute("UPDATE main SET has_sent = ? WHERE img_path = ?", (1, img_path))

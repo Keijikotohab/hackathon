@@ -8,10 +8,10 @@ load_dotenv()
 
 
 class Slack:
-    def __init__(self, token=os.environ['SLACK_TOKEN'], channel_id=os.environ['SLACK_USER_CHANNEL_ID']):
+    def __init__(self, token=os.environ['SLACK_TOKEN']):
         self.channel_id = os.environ['SLACK_CHANNEL_ID']
-        self.user_channel_id = os.environ['SLACK_USER_CHANNEL_ID']
         self.client = WebClient(token=token)
+        self.user_channel_id = os.environ['SLACK_USER_CHANNEL_ID']
         self.users = list(list())
         self._get_users()
 
@@ -108,16 +108,22 @@ class Slack:
         msgs, _ = self._get_channle_history(channel_id, limit)
         li = list()
         for msg in msgs:
+            # breakpoint()
+            # print(type(msgs))
+            # print(msg["ts"])
+            # print(msgs)
             ts = msg['ts']
-            file_name = msg['files'][0]['name'].split('.')[0]
             try:
+                file_name = msg['files'][0]['name'].split('.')[0]
                 reactions = msg['reactions']
             except:
                 pass
+                # self._add_reaction(channel_id, ['white_check_mark'], ts)
+                # li.append([ts, file_name])
             else:
                 checked = self._check_if_checked(reactions, 'white_check_mark')
                 eyed = self._check_has_eyes(reactions)
-                print(checked, eyed)
+                #print(checked, eyed)
                 if (not checked) and eyed:
                     li.append([ts, file_name])
         return li
@@ -176,7 +182,7 @@ class Slack:
         チャンネル内のメッセージにリアクションがあるかチェックする
         """
         for im in self._get_ims():
-            print(im)
+            #print(im)
             id_ = im['id']
             msgs, ts = self._get_channle_history(id_, 10)
             for msg in msgs:
@@ -214,7 +220,7 @@ class Slack:
 
         for msg in msgs:
             ts = msg['ts']
-            print(ts)
+            #print(ts)
             reply, _ = self._get_replies(channel_id, ts, 5)
             try:
                 reply = reply[1]
@@ -225,7 +231,7 @@ class Slack:
                 self._add_reaction(channel_id, ['+1', '-1'], ts_reply)
                 reactions = self._get_reaction(channel_id, ts_reply)
                 if self._check_if_checked(reactions, 'white_check_mark'):
-                    print('checked')
+                    #print('checked')
                     continue
                 else:
 
@@ -233,19 +239,17 @@ class Slack:
                     good = self._check_has_good(reactions) == 'has_good'
                     bad = self._check_has_bad(reactions) == 'has_bad'
                     if good:
-                        print('good')
+                        #print('good')
                         self._add_reaction(channel_id, ['white_check_mark'], ts_reply)
                         good_list.append([ts, msg['files'][0]['name'].split('.')[0]])
                     elif bad:
-                        print('bad')
+                        #print('bad')
                         self._add_reaction(channel_id, ['white_check_mark'], ts_reply)
                         bad_list.append([ts, msg['files'][0]['name'].split('.')[0]])
         return good_list, bad_list
 
 
+
 if __name__ == '__main__':
     slack = Slack()
-    li = slack.get_unsent_imgs(slack.channel_id)
-    li = [[l[0], 'hori'] for l in li]
-    print(li)
-    slack.send_names(slack.channel_id, li)
+    li = slack.get_unsent_imgs(slack.user_channel_id)
