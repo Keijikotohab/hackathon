@@ -17,6 +17,7 @@
 1. backendディレクトリに，`.env`を作成
 1. `.env`に先ほどコピーしたtokenを貼り付け
 1. `.env`に，slackチャンネルのIDを貼り付け
+1. `.env`に，ボットとのDMチャンネルのIDを貼り付け
 ```python:.env
 SLACK_TOKEN={Here change bot token, and delete "{}"}
 SLACK_CHANNEL_ID={Here change channel id, and delete "{}"}
