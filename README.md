@@ -1,5 +1,7 @@
 [![GitHub license](https://img.shields.io/github/license/Keijikotohab/hackathon?style=for-the-badge)](https://github.com/Keijikotohab/hackathon/blob/main/LICENSE)
+[![GitHub license](https://img.shields.io/github/license/Keijikotohab/hackathon)](https://github.com/Keijikotohab/hackathon/blob/main/LICENSE)
 [![GitHub stars](https://img.shields.io/github/stars/Keijikotohab/hackathon?style=for-the-badge)](https://github.com/Keijikotohab/hackathon/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/Keijikotohab/hackathon?style=for-the-badge)](https://github.com/Keijikotohab/hackathon/network)
 
 # 導入方法
 ![haikeiarimono_1](https://user-images.githubusercontent.com/62993486/187008580-935290c9-c934-4363-8888-c9ae5b4e559d.png)
