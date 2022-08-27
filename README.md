@@ -5,7 +5,6 @@
 [![GitHub stars](https://img.shields.io/github/stars/Keijikotohab/hackathon?style=for-the-badge)](https://github.com/Keijikotohab/hackathon/stargazers)
 [![GitHub forks](https://img.shields.io/github/forks/Keijikotohab/hackathon?style=for-the-badge)](https://github.com/Keijikotohab/hackathon/network)
 ![GitHub repo file count](https://img.shields.io/github/directory-file-count/Keijikotohab/hackathon?style=for-the-badge)
-
 ![GitHub contributors](https://img.shields.io/github/contributors/Keijikotohab/hackathon?style=for-the-badge)
 ![Twitter Follow](https://img.shields.io/twitter/follow/Mono_Oboe?style=for-the-badge)
 [![Twitter](https://img.shields.io/twitter/url?style=for-the-badge&url=https%3A%2F%2Ftwitter.com%2FMono_Oboe)](https://twitter.com/intent/tweet?text=これは覚えられるわあ:&url=https%3A%2F%2Fgithub.com%2FKeijikotohab%2Fhackathon)
