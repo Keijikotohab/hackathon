@@ -1,3 +1,5 @@
+![example branch parameter](https://github.com/github/docs/actions/workflows/main.yml/badge.svg?branch=feature-1)
+
 # 導入方法
 ![haikeiarimono_1](https://user-images.githubusercontent.com/62993486/187008580-935290c9-c934-4363-8888-c9ae5b4e559d.png)
 
