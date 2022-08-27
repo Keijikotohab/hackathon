@@ -8,6 +8,7 @@
 ![GitHub contributors](https://img.shields.io/github/contributors/Keijikotohab/hackathon?style=for-the-badge)
 [![Twitter Follow](https://img.shields.io/twitter/follow/Mono_Oboe?style=for-the-badge)](https://twitter.com/Mono_Oboe)
 [![Twitter](https://img.shields.io/twitter/url?style=for-the-badge&url=https%3A%2F%2Ftwitter.com%2FMono_Oboe)](https://twitter.com/intent/tweet?text=これは覚えられるわあ:&url=https%3A%2F%2Fgithub.com%2FKeijikotohab%2Fhackathon)
+[![Open in Visual Studio Code](https://img.shields.io/static/v1?logo=visualstudiocode&label=&message=Open%20in%20Visual%20Studio%20Code&labelColor=2c2c32&color=007acc&logoColor=007acc)](https://open.vscode.dev/Keijikotohab/hackathon)
 
 # モノオボエ導入方法
 ![haikeiarimono_1](https://user-images.githubusercontent.com/62993486/187008580-935290c9-c934-4363-8888-c9ae5b4e559d.png)
